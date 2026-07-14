@@ -1,0 +1,26 @@
+<!--
+  FULL WINDOW POPUP HTML SHELL — Personal Slack v1.0
+  
+  Minimal HTML that loads the React app in a separate popup window.
+  This popup is created by chrome.windows.create() from App.tsx's "Full" button.
+  
+  WHY A SEPARATE HTML:
+    WXT generates a standalone window for each entrypoint. The popup has its
+    own URL (popup.html) and is opened at 90% screen size. It shares all
+    source code with the side panel through entrypoints/popup/main.tsx.
+-->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Personal Slack v1.0 — Full Window</title>
+    <style>
+      html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="./main.tsx"></script>
+  </body>
+</html>

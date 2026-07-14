@@ -1,0 +1,23 @@
+# Build outputs
+node_modules/
+.wxt/
+.output/
+dist/
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment / secrets
+.env
+.env.local
+oauth.txt
+context.md

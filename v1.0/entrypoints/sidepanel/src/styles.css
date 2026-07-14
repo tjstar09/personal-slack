@@ -1,0 +1,1381 @@
+/* ==========================================================================
+   ROOT THEME & VARIABLES — Personal Slack v1.0
+   ========================================================================== */
+
+:root {
+  color-scheme: dark;
+  --bg: #111418;
+  --panel: #181c22;
+  --panel-2: #20262e;
+  --panel-3: #2a313b;
+  --text: #f5f7fb;
+  --muted: #9aa5b5;
+  --subtle: #657184;
+  --line: #313946;
+  --accent: #25c2a0;
+  --accent-2: #f0b429;
+  --danger: #ff6b6b;
+  --shadow: 0 16px 44px rgb(0 0 0 / 0.28);
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+/* ==========================================================================
+   RESET & BASE STYLES
+   ========================================================================== */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  min-width: 420px;
+  background: var(--bg);
+  color: var(--text);
+  overflow: hidden;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  color: inherit;
+}
+
+/* ==========================================================================
+   LAYOUT — app-shell, rail, sidebar, main-panel
+   ==========================================================================
+   The app is a 3-column CSS Grid:
+     [Rail (56px)] [Sidebar (180-255px)] [Main Panel (flex)]
+   In full-window mode, the sidebar is conditionally hidden via
+   .sidebar-collapsed which collapses the middle column to 0.
+   ========================================================================== */
+
+.app-shell {
+  display: grid;
+  grid-template-columns: 56px minmax(180px, 255px) minmax(0, 1fr);
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.03), transparent 180px),
+    var(--bg);
+}
+
+.app-shell.sidebar-collapsed {
+  grid-template-columns: 56px minmax(0, 1fr);
+}
+
+.rail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 8px;
+  background: #0d1014;
+  border-right: 1px solid var(--line);
+}
+
+/* ==========================================================================
+   RAIL & BRAND COMPONENTS
+   ========================================================================== */
+
+.brand,
+.page-button,
+.icon-button,
+.mode-button,
+.mini-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid transparent;
+  background: transparent;
+  cursor: pointer;
+}
+
+.brand {
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #06231d;
+  border: none;
+  padding: 0;
+}
+
+.brand:hover {
+  filter: brightness(1.1);
+}
+
+/* ==========================================================================
+   SIDEBAR COMPONENTS — page list, header, search, new page row,
+   mode tabs, tags, conversation list
+   ========================================================================== */
+
+.page-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.page-button {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  color: var(--muted);
+  background: var(--panel);
+}
+
+.page-button span {
+  position: absolute;
+  right: 5px;
+  bottom: 3px;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.page-button.active {
+  color: var(--text);
+  border-color: rgb(37 194 160 / 0.5);
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+
+.sidebar {
+  min-width: 0;
+  padding: 16px;
+  background: var(--panel);
+  border-right: 1px solid var(--line);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.sidebar-header,
+.top-bar,
+.conversation-title,
+.conversation-meta,
+.section-title,
+.composer-tools,
+.top-actions {
+  display: flex;
+  align-items: center;
+}
+
+.sidebar-header,
+.top-bar {
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.eyebrow {
+  margin: 0 0 4px;
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0;
+}
+
+h1,
+h2 {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.2;
+}
+
+h2 {
+  font-size: 20px;
+}
+
+.icon-button {
+  flex: 0 0 auto;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: var(--panel-2);
+  color: var(--muted);
+}
+
+.icon-button:hover,
+.mini-button:hover,
+.mode-button:hover,
+.command-button:hover {
+  border-color: rgb(255 255 255 / 0.15);
+  filter: brightness(1.08);
+}
+
+.send-button:hover {
+  filter: brightness(0.95);
+}
+
+.search-box,
+.new-page-row,
+.composer-tools label {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  gap: 8px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #12161b;
+  color: var(--muted);
+}
+
+.search-box {
+  padding: 0 10px;
+  height: 38px;
+}
+
+.search-box input,
+.new-page-row input,
+.composer-tools input,
+.composer-tools select {
+  min-width: 0;
+  width: 100%;
+  border: 0;
+  outline: 0;
+  color: var(--text);
+  background: transparent;
+}
+
+.search-box input::placeholder,
+.new-page-row input::placeholder,
+.composer textarea::placeholder,
+.composer-tools input::placeholder {
+  color: var(--subtle);
+}
+
+.new-page-row {
+  padding-left: 10px;
+}
+
+.new-page-row .icon-button {
+  width: 34px;
+  height: 34px;
+  border-radius: 0 7px 7px 0;
+  border-left: 1px solid var(--line);
+}
+
+.mode-tabs {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  padding: 4px;
+  border-radius: 8px;
+  background: #11161b;
+  border: 1px solid var(--line);
+}
+
+.mode-button {
+  height: 32px;
+  border-radius: 6px;
+  color: var(--muted);
+}
+
+.mode-button.active {
+  color: #071c18;
+  background: var(--accent);
+}
+
+.tag-strip {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+}
+
+.tag {
+  height: 26px;
+  white-space: nowrap;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0 9px;
+  color: var(--muted);
+  background: var(--panel-2);
+  cursor: pointer;
+}
+
+.tag.active {
+  color: #071c18;
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.conversation-list {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-right: 2px;
+}
+
+.conversation-card {
+  width: 100%;
+  text-align: left;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 11px;
+  background: #151a20;
+  color: inherit;
+  cursor: pointer;
+}
+
+.conversation-card.active {
+  border-color: rgb(37 194 160 / 0.7);
+  background: #192520;
+}
+
+.conversation-title {
+  justify-content: space-between;
+  gap: 8px;
+  font-weight: 750;
+}
+
+.conversation-title span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.conversation-card p {
+  margin: 7px 0 10px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.35;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.conversation-meta {
+  justify-content: space-between;
+  color: var(--subtle);
+  font-size: 11px;
+}
+
+.mini-button {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  color: var(--muted);
+}
+
+/* ==========================================================================
+   MAIN PANEL — top bar, command buttons
+   ========================================================================== */
+
+.main-panel {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.top-bar {
+  min-height: 70px;
+  padding: 14px 18px;
+  background: rgb(24 28 34 / 0.86);
+  border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(18px);
+}
+
+.top-actions {
+  gap: 8px;
+}
+
+.command-button,
+.danger-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 34px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0 11px;
+  color: var(--text);
+  background: var(--panel-2);
+  cursor: pointer;
+}
+
+.command-button.large {
+  min-height: 42px;
+  justify-content: flex-start;
+}
+
+.command-button:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+/* "More" dropdown in the top bar. Reuses slash-suggestions visuals but
+   avoids its absolute positioning so portal-based fixed positioning works. */
+.top-more-menu {
+  position: fixed;
+  width: max-content;
+  max-width: min(220px, calc(100vw - 80px));
+  min-width: 140px;
+  background: #1a2027;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: 0 -4px 16px rgb(0 0 0 / 0.3);
+  max-height: 160px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 4px;
+  z-index: 9999;
+}
+
+/* ==========================================================================
+   CHAT LAYOUT — markdown preview, message stream, inline bookmarks, composer
+   ========================================================================== */
+
+.chat-layout {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-rows: minmax(120px, 24vh) minmax(0, 1fr) auto auto;
+  overflow: hidden;
+  transition: grid-template-rows 0.2s ease;
+}
+
+/* When preview is collapsed, keep just the toggle button row visible.
+   The toggle is ~32px (18px padding top+bottom + ~14px button height).
+   This frees the rest of the preview's space for the message stream. */
+.chat-layout.preview-hidden {
+  grid-template-rows: auto minmax(0, 1fr) auto auto;
+}
+.chat-layout.preview-hidden .markdown-preview {
+  padding: 6px 18px;
+  min-height: 36px;
+  border-bottom: 1px solid var(--line);
+  overflow: hidden;
+}
+.chat-layout.preview-hidden .markdown-preview .preview-content {
+  display: none;
+}
+.chat-layout.preview-hidden .markdown-preview .toggle-button {
+  margin-bottom: 0;
+}
+
+.markdown-preview {
+  min-height: 0;
+  overflow: hidden;
+  border-bottom: 1px solid var(--line);
+  background: #13181d;
+  padding: 13px 18px;
+  transition: padding 0.2s ease, min-height 0.2s ease;
+}
+
+
+.section-title {
+  gap: 8px;
+  margin-bottom: 8px;
+  color: var(--accent-2);
+  font-size: 12px;
+  font-weight: 750;
+}
+
+/* Toggle button for collapsible sections (markdown preview) */
+.toggle-button {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  background: transparent;
+  color: var(--accent-2);
+  font-size: 12px;
+  font-weight: 750;
+  padding: 4px 0;
+  width: 100%;
+  text-align: left;
+}
+.toggle-button:hover {
+  color: var(--text);
+}
+.preview-content {
+  padding: 4px 0;
+}
+
+/* Restore Session button (rendered from restore: protocol links) */
+.restore-session-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  background: rgb(99 102 241 / 0.12);
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.restore-session-btn:hover {
+  background: rgb(99 102 241 / 0.22);
+}
+
+/* Slash command suggestions popup.
+   The wrapper is the bordered "input box" that holds both the textarea and the
+   embedded Send button. It is a horizontal flex row so the Send control sits
+   inside the same box, separated from the textarea by a left border.
+   NOTE: Do NOT set overflow:hidden here — the .slash-suggestions popup is
+   absolutely positioned with bottom:100% (above the box) and would be clipped. */
+.composer-textarea-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #0f1318;
+  min-width: 0;
+}
+
+.composer-textarea-wrapper textarea {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 56px;
+  max-height: 40vh;
+  resize: vertical;
+  border: none;
+  outline: none;
+  color: var(--text);
+  background: transparent;
+  padding: 10px 12px;
+  font: inherit;
+}
+
+.composer-textarea-wrapper .send-button {
+  flex: 0 0 auto;
+  align-self: center;
+  height: 56px;
+  width: 88px;
+  max-width: 120px;
+  min-height: 56px;
+  min-width: 88px;
+  padding: 0 12px;
+  border: none;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #06231d;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+.composer-textarea-wrapper .send-button:hover {
+  filter: brightness(0.95);
+}
+.slash-suggestions {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: #1a2027;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: 0 -4px 16px rgb(0 0 0 / 0.3);
+  max-height: 160px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 4px;
+}
+
+/* Base menu styling shared between slash suggestions and More menu */
+.slash-suggestions,
+.top-more-menu {
+  background: #1a2027;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: 0 -4px 16px rgb(0 0 0 / 0.3);
+}
+.slash-suggestion-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border: none;
+  background: transparent;
+  color: var(--text);
+  font-size: 13px;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+}
+.slash-suggestion-item:hover,
+.slash-suggestion-item.selected {
+  background: rgb(99 102 241 / 0.15);
+}
+.slash-suggestion-name {
+  font-weight: 700;
+  color: var(--accent);
+  min-width: 90px;
+}
+.slash-suggestion-desc {
+  color: var(--muted);
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.markdown-body {
+  color: var(--text);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.markdown-body.compact {
+  font-size: 13px;
+}
+
+.markdown-body > :first-child {
+  margin-top: 0;
+}
+
+.markdown-body > :last-child {
+  margin-bottom: 0;
+}
+
+.markdown-body a {
+  color: #7dd3fc;
+}
+
+.markdown-body code {
+  border-radius: 5px;
+  padding: 2px 5px;
+  background: #0d1117;
+  color: #f4d58d;
+}
+
+.markdown-body pre {
+  overflow: auto;
+  border-radius: 8px;
+  padding: 10px;
+  background: #0d1117;
+}
+
+.markdown-body pre code {
+  padding: 0;
+  background: transparent;
+}
+
+.markdown-body blockquote {
+  margin-left: 0;
+  padding-left: 10px;
+  color: var(--muted);
+  border-left: 3px solid var(--accent);
+}
+
+.markdown-body table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.markdown-body th,
+.markdown-body td {
+  border: 1px solid var(--line);
+  padding: 5px 7px;
+}
+
+.message-stream {
+  min-height: 0;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px 18px;
+}
+
+.message-bubble {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #171c22;
+  padding: 12px;
+  box-shadow: var(--shadow);
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+.message-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+  color: var(--subtle);
+  font-size: 11px;
+}
+
+.inline-bookmarks {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 0 18px 12px;
+}
+
+.bookmark-chip {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 220px;
+  min-height: 38px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 6px 9px;
+  color: var(--text);
+  background: var(--panel-2);
+  text-decoration: none;
+}
+
+.bookmark-chip img {
+  width: 42px;
+  height: 26px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.bookmark-chip span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+}
+
+.composer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px 18px 16px;
+  background: #12161b;
+  border-top: 1px solid var(--line);
+}
+
+.composer-tools {
+  align-items: stretch;
+  gap: 8px;
+}
+
+/* Custom page picker — trigger styled to match the tags input, dropdown
+   reuses .slash-suggestions for the dark look. */
+.page-select {
+  position: relative;
+  flex: 1;
+  min-height: 36px;
+}
+
+.page-select-trigger {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  border: none;
+  border-radius: 6px;
+  padding: 0 9px;
+  color: var(--text);
+  background: transparent;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.page-select-trigger:hover {
+  color: var(--text);
+}
+
+/* Dropdown opens upward so it doesn't cover the textarea; matches slash popup */
+.page-select-menu {
+  top: 100%;
+  bottom: auto;
+  margin-bottom: 0;
+  margin-top: 4px;
+}
+
+/* ==========================================================================
+   VIEWS — gallery, bookmarks, settings
+   ========================================================================== */
+
+.gallery-grid,
+.bookmarks-grid,
+.settings-panel {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 18px;
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+/* Cover Flow Gallery */
+.gallery-view {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100%;
+  padding: 18px;
+}
+
+.gallery-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+  z-index: 10;
+}
+
+.gallery-nav {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--panel-2);
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.gallery-nav:hover:not(:disabled) {
+  border-color: var(--accent);
+  background: var(--panel-3);
+}
+
+.gallery-nav:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.gallery-counter {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+  min-width: 48px;
+  text-align: center;
+}
+
+.coverflow {
+  position: relative;
+  width: 100%;
+  height: 320px;
+  perspective: 1200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-style: preserve-3d;
+}
+
+.coverflow-item {
+  position: absolute;
+  width: 260px;
+  height: 280px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+}
+
+.coverflow-item.active {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent), 0 20px 50px rgb(0 0 0 / 0.35);
+}
+
+.coverflow-item-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: 100%;
+  overflow: hidden;
+}
+
+.coverflow-item-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.coverflow-item-title {
+  font-weight: 800;
+  font-size: 14px;
+  line-height: 1.3;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.coverflow-item-summary {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.4;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  flex: 1;
+}
+
+.coverflow-item-meta {
+  color: var(--subtle);
+  font-size: 11px;
+}
+
+.gallery-card,
+.bookmark-card {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  color: var(--text);
+  text-align: left;
+  text-decoration: none;
+  overflow: hidden;
+}
+
+.gallery-card {
+  min-height: 180px;
+  cursor: pointer;
+}
+
+.gallery-card img,
+.bookmark-card img {
+  width: 100%;
+  height: 95px;
+  object-fit: cover;
+  background: #0d1117;
+}
+
+.gallery-icon,
+.bookmark-card-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 95px;
+  color: var(--accent);
+  background: #0d1117;
+}
+
+.gallery-card span,
+.gallery-card p {
+  display: block;
+  padding: 0 12px;
+}
+
+.gallery-card span {
+  margin-top: 10px;
+  font-weight: 800;
+}
+
+.gallery-card p {
+  margin: 6px 0 12px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.bookmarks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 12px;
+}
+
+.bookmark-card div:last-child {
+  padding: 12px;
+}
+
+.bookmark-card-title {
+  margin-bottom: 6px;
+  font-weight: 800;
+}
+
+.bookmark-card p {
+  margin: 0 0 8px;
+  color: var(--muted);
+}
+
+.bookmark-card span {
+  color: var(--accent);
+  font-size: 12px;
+}
+
+.settings-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.stat {
+  min-height: 74px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px;
+  background: var(--panel);
+}
+
+.stat strong {
+  display: block;
+  font-size: 24px;
+}
+
+.stat span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.settings-actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 10px;
+}
+
+.setup-note,
+.status-line {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px;
+  color: var(--muted);
+  background: #151a20;
+}
+
+.danger-button {
+  align-self: flex-start;
+  color: #ffe3e3;
+  background: rgb(255 107 107 / 0.14);
+  border-color: rgb(255 107 107 / 0.35);
+}
+
+/* ==========================================================================
+   MESSAGE PREVIEWS — link preview cards, GitHub action panels
+   ========================================================================== */
+
+.hidden-file {
+  display: none;
+}
+
+.message-previews {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.link-preview-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px;
+  color: var(--text);
+  background: var(--panel);
+  text-decoration: none;
+  transition: border-color 0.15s;
+}
+
+.link-preview-card:hover {
+  border-color: var(--accent);
+}
+
+.link-preview-card img {
+  width: 48px;
+  height: 32px;
+  object-fit: cover;
+  border-radius: 5px;
+  background: #0d1117;
+}
+
+.link-preview-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 32px;
+  border-radius: 5px;
+  color: var(--accent);
+  background: #0d1117;
+  flex-shrink: 0;
+}
+
+.link-preview-card > div {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.link-preview-card strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+}
+
+.link-preview-card span {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.github-panel {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px;
+  background: #141a22;
+}
+
+.github-panel-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+
+.github-panel-title strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.github-action-group {
+  margin-bottom: 6px;
+}
+
+.github-action-group:last-child {
+  margin-bottom: 0;
+}
+
+.github-action-group > span {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--subtle);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.github-action-group > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.github-action-group a {
+  font-size: 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 3px 8px;
+  color: var(--text);
+  background: var(--panel-2);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.github-action-group a:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ==========================================================================
+   ANIMATIONS — short preview text, status fade
+   ========================================================================== */
+
+.short-preview-animated {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--accent-2);
+}
+
+.short-preview-char {
+  display: inline-block;
+  opacity: 0;
+}
+
+/* ==========================================================================
+   STATUS MESSAGES
+   ==========================================================================
+   Positioned bottom-left to avoid overlapping the Send button (bottom-right).
+   Uses a CSS animation that fades in on appearance and fades out after 5s.
+   The animation is triggered by re-rendering (changing status text resets it).
+   ========================================================================== */
+
+.main-status {
+  position: fixed;
+  left: 16px;
+  bottom: 16px;
+  max-width: min(360px, calc(100vw - 32px));
+  border: 1px solid rgb(37 194 160 / 0.35);
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: var(--text);
+  background: rgb(17 20 24 / 0.94);
+  box-shadow: var(--shadow);
+  font-size: 12px;
+  line-height: 1.35;
+  z-index: 10;
+  animation: statusFadeIn 0.2s ease-out, statusFadeOut 0.4s ease-in 4.6s forwards;
+}
+
+@keyframes statusFadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes statusFadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+/* ==========================================================================
+   DRIVE SYNC CONTROLS (within SettingsView)
+   ========================================================================== */
+
+.settings-section {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px;
+  background: var(--panel);
+}
+
+.settings-section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 12px;
+  font-size: 14px;
+  color: var(--text);
+}
+
+.drive-sync-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.drive-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text);
+}
+
+.drive-toggle input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.drive-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.drive-field input {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 7px 9px;
+  color: var(--text);
+  background: #0f1318;
+  font-size: 13px;
+}
+
+.drive-last-synced {
+  margin: 0;
+  color: var(--subtle);
+  font-size: 11px;
+}
+
+/* ==========================================================================
+   RESPONSIVE — narrow side panel
+   ========================================================================== */
+
+@media (max-width: 560px) {
+  body {
+    min-width: 320px;
+  }
+
+  .app-shell {
+    grid-template-columns: 48px minmax(150px, 42vw) minmax(0, 1fr);
+  }
+
+  .sidebar {
+    padding: 12px;
+  }
+
+  .top-bar {
+    padding: 12px;
+  }
+
+  .command-button span,
+  .send-button span {
+    display: none;
+  }
+
+  .composer-tools,
+  .stats-row {
+    grid-template-columns: 1fr;
+    display: grid;
+  }
+}
