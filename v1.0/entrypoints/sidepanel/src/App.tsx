@@ -105,6 +105,8 @@ export function App({ fullWindow = false }: { fullWindow?: boolean }) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const statusTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
   const [sendToOpen, setSendToOpen] = useState(false);
   const [sendToMessage, setSendToMessage] = useState<Message | null>(null);
   const [moreOpen, setMoreOpen] = useState(false);
@@ -131,6 +133,13 @@ export function App({ fullWindow = false }: { fullWindow?: boolean }) {
     setStatus(msg);
     if (statusTimerRef.current) clearTimeout(statusTimerRef.current);
     statusTimerRef.current = setTimeout(() => setStatus(''), 5000);
+  }, []);
+
+  // Show toast notification with auto-fade after 3 seconds
+  const showToast = useCallback((message: string, type: 'success' | 'error' = 'success') => {
+    setToast({ message, type });
+    if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+    toastTimerRef.current = setTimeout(() => setToast(null), 3000);
   }, []);
 
   // Load workspace and check first-run
@@ -209,21 +218,21 @@ export function App({ fullWindow = false }: { fullWindow?: boolean }) {
 
   const handleCaptureTab = useCallback(async () => {
     setCaptureBusy(true);
-    setStatus('Capturing current tab...');
+    showToast('Capturing current tab...', 'success');
     try {
       const data = await captureTab();
       if (!data.markdown) {
-        setStatus('Could not capture this tab. It may be a chrome:// page.');
+        showToast('Could not capture this tab. It may be a chrome:// page.', 'error');
         return;
       }
       setDraft((current) => ({ ...current, body: data.markdown, tags: 'capture' }));
-      setStatus(`Captured: ${data.title || data.url}`);
+      showToast(`Captured: ${data.title || data.url}`, 'success');
     } catch (error) {
-      setStatus(`Capture failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      showToast(`Capture failed: ${error instanceof Error ? error.message : 'Unknown error'}`, 'error');
     } finally {
       setCaptureBusy(false);
     }
-  }, []);
+  }, [showToast]);
 
   // Open full window
   const openFullWindow = useCallback(() => {
@@ -767,6 +776,12 @@ export function App({ fullWindow = false }: { fullWindow?: boolean }) {
               <ExternalLink size={16} />
               <span>{captureBusy ? 'Capturing...' : 'Capture'}</span>
             </button>
+            {toast && (
+              <div className={`toast toast-${toast.type}`}>
+                <span>{toast.type === 'success' ? '✓' : '!'}</span>
+                <span>{toast.message}</span>
+              </div>
+            )}
             <div>
               <button
                 ref={moreButtonRef}

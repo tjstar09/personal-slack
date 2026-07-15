@@ -398,6 +398,7 @@ h2 {
 }
 
 .top-actions {
+  position: relative;
   gap: 8px;
 }
 
@@ -1278,6 +1279,48 @@ h2 {
 }
 
 @keyframes statusFadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+/* ==========================================================================
+   TOAST NOTIFICATIONS — top-right capture feedback
+   ========================================================================== */
+
+.toast {
+  position: absolute;
+  top: -8px;
+  right: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 6px 10px;
+  color: var(--text);
+  background: var(--panel-2);
+  box-shadow: var(--shadow);
+  font-size: 12px;
+  line-height: 1.35;
+  white-space: nowrap;
+  animation: toastIn 0.2s ease-out, toastOut 0.3s ease-in 2.7s forwards;
+  z-index: 9999;
+}
+
+.toast-success {
+  border-color: rgb(37 194 160 / 0.5);
+}
+
+.toast-error {
+  border-color: rgb(255 107 107 / 0.5);
+}
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes toastOut {
   from { opacity: 1; }
   to { opacity: 0; }
 }
