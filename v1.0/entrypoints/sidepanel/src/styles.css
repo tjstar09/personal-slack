@@ -1050,6 +1050,20 @@ h2 {
   text-align: left;
   text-decoration: none;
   overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.gallery-card:hover,
+.bookmark-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-elevated);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.gallery-card:active,
+.bookmark-card:active {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow);
 }
 
 .gallery-card {
