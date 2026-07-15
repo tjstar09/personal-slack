@@ -32,6 +32,9 @@ Before writing any code, read the files in the order specified by your task belo
 |---|---|
 | `06-AGENTS.md` | When you need to invoke an AI agent for a sub-task |
 | `07-ELEMENT-REFERENCE.md` | When addressing or modifying UI elements — provides friendly names, hierarchy, position, neighbors, and CSS selectors |
+| `08-DOCUMENTATION.md` | When contributing changes — tells you which docs to update and when |
+| `09-GIT-WORKFLOW.md` | When needing git commands, branch strategy, or commit conventions |
+| `10-CAPTURE-FEATURE-PLAN.md` | When working on the capture button feature overhaul |
 | Archive `archive/` | When you need v0.1 or v0.2 source code for reference (retired) |
 
 ---

@@ -16,7 +16,10 @@ personal-slack/
 │   ├── 04-ARCHITECTURE.md              # Design decisions, data flow, patterns
 │   ├── 05-BUILD.md                     # Build commands, verification, OAuth setup
 │   ├── 06-AGENTS.md                    # AI agent skill references
-│   └── 07-ELEMENT-REFERENCE.md         # UI element catalog with addressing scheme
+│   ├── 07-ELEMENT-REFERENCE.md         # UI element catalog with addressing scheme
+│   ├── 08-DOCUMENTATION.md             # Documentation update policy
+│   ├── 09-GIT-WORKFLOW.md              # Git version control workflow
+│   └── 10-CAPTURE-FEATURE-PLAN.md      # Planned capture button improvements
 │
 ├── archive/                            # Retired versions
 │   ├── v0.1/                           # First prototype (was browser/)
@@ -56,11 +59,10 @@ personal-slack/
 │       ├── js-text-library/skills.md   # Anime.js text animation
 │       └── transformer.js/skills.md    # Transformers.js, ONNX, local AI
 │
+├── .gitignore                          # Root git ignore
 ├── starter_prompt.md                   # Slim entry point (redirects to docs/)
 ├── AGENTS.md                           # Short redirect to docs/06-AGENTS.md
-├── context.md                          # (TO BE DELETED — replaced by docs/)
-└── oauth.txt                           # (TO BE DELETED — merged into docs/05-BUILD.md)
-```
+└── README.md                           # Project overview + development guide
 
 ---
 
