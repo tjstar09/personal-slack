@@ -84,6 +84,12 @@ All known bugs, their fixes, and how to avoid repeating them.
 - **Fix**: Added `min-width: 0` to `.composer-textarea-wrapper`. Set textarea to `flex: 1 1 auto`, `resize: vertical`, and bounded heights. Set Send button to `flex: 0 0 auto` with fixed height, removing it from the shared button stack styles that made it grow.
 - **Avoid**: Always constrain flex children with `min-width: 0` and explicit `flex` values; prevent textarea horizontal resize with `resize: vertical`.
 
+### Issue 14 — Send-to-page overlay rendered as bottom-bar text, unusable
+- **Symptom**: Clicking the per-message "Send to page" button did not open a popup. Instead a stray block of page names appeared pinned at the bottom of the main panel and was not interactive. (Known issue, reported earlier.)
+- **Cause**: The `.sendto-overlay` / `.sendto-card` elements had **no CSS**. They rendered in normal document flow at the end of `.main-panel`, appearing as a bottom strip. The inner page list reuses `.slash-suggestions`, which is `position: absolute; bottom: 100%` for the composer popup — so inside the card it drifted out of place and was unclickable.
+- **Fix**: Added overlay CSS: `.sendto-overlay` / `.onboarding-overlay` are now `position: fixed; inset: 0; z-index: 9999` flex-centered modals with a dimmed backdrop. `.sendto-card` / `.onboarding-card` are centered cards. The inner `.sendto-card .slash-suggestions` is neutralized to `position: static` so the page list flows normally inside the card; items get a bordered, clickable style.
+- **Avoid**: Any new overlay/modal (overlay + card pattern) must have its own fixed/absolute positioning CSS. Do not reuse `.slash-suggestions` (which is absolutely positioned for the composer) inside a container without resetting `position` to `static`.
+
 ---
 
 ## Historical Pitfalls (from v0.2 → v1.0 migration)
