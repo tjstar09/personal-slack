@@ -1502,6 +1502,79 @@ h2 {
 }
 
 /* ==========================================================================
+   OVERLAYS — send-to-page picker + onboarding tour
+   Must escape normal flow and sit above everything (z-index 9999).
+   Without this block they render inline at the bottom of main-panel and the
+   inner .slash-suggestions list (position:absolute) drifts out of place —
+   this is the "send to page shows text at bottom bar, unusable" bug.
+   ========================================================================== */
+
+.sendto-overlay,
+.onboarding-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgb(0 0 0 / 0.55);
+  backdrop-filter: blur(2px);
+}
+
+.sendto-card,
+.onboarding-card {
+  width: min(360px, 100%);
+  max-height: 80vh;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--panel);
+  box-shadow: var(--shadow-elevated);
+  padding: 16px;
+  animation: menuSlideIn 0.18s ease-out;
+}
+
+.sendto-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.sendto-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 750;
+}
+
+/* Inside the send-to-page card the page list reuses .slash-suggestions, but
+   that class is absolutely positioned for the composer popup. Neutralize the
+   absolute positioning so the list flows inside the card. */
+.sendto-card .slash-suggestions {
+  position: static;
+  bottom: auto;
+  left: auto;
+  right: auto;
+  margin: 0;
+  box-shadow: none;
+  border: none;
+  background: transparent;
+  max-height: none;
+  overflow: visible;
+  gap: 4px;
+}
+
+.sendto-card .slash-suggestion-item {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #12161b;
+}
+
+/* ==========================================================================
    RESPONSIVE — narrow side panel
    ========================================================================== */
 
