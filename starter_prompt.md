@@ -32,5 +32,6 @@ Do not read all docs — read only what your task needs. See `docs/00-START.md` 
 4. Verify: `cd v1.0 && npx tsc --noEmit && npm run build`
 5. Update `docs/` files and `v1.0/README.md` if your change affects features, bugs, or architecture. Use `docs/08-DOCUMENTATION.md` as the source of truth for which docs to update.
 6. Report results concisely
+7. Follow the review/merge workflow in `docs/09-GIT-WORKFLOW.md` — present exactly 3 approval options to the user after pushing a feature branch
 
 **Do not skip context loading. Do not reinvent patterns. Do not panic on npm warnings. Build first, optimize later.**

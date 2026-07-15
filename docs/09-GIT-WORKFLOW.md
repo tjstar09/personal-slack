@@ -60,28 +60,60 @@ git commit -m "feat: description of the change"
 
 ### 4. Push to GitHub (if remote is configured)
 
+> **Mandatory if remote exists.** Always push the feature branch before asking for review.
+> This allows the user to inspect the diff on GitHub and ensures the branch isn't lost locally.
+
 ```bash
 git push -u origin feature/capture-preview-overlay
 ```
 
-### 5. User reviews and approves
+### 5. Ask user to review
 
-- Test the built extension in Chrome
-- If rejected → discard the branch (step 2)
-- If approved → proceed to merge
+Present the user with exactly **three options** — no more, no less:
+
+```
+1. ✅ Changes approved. Merge to main.
+2. 🔧 Changes working but need more modifications.
+3. ❌ Changes not working. Investigate and fix.
+```
+
+**Do not merge until the user selects option 1.**
+
+### 5a. Handle the user's response
+
+| Option | Action |
+|---|---|
+| **1 — Approved** | Proceed to step 6 (Merge). |
+| **2 — Needs modifications** | Stay on the feature branch. If the user has already described what to change, apply it. If not, ask: "What would you like me to change?" |
+| **3 — Not working / investigate** | Stay on the feature branch. Ask the user: "What issue are you seeing? What should I investigate or fix?" Do not proceed to merge until the issue is resolved and the user approves. |
 
 ### 6. Merge to main
+
+Only run this after the user has selected **Option 1 (Approved)**.
 
 ```bash
 git checkout main
 git merge feature/capture-preview-overlay
 cd v1.0 && npx tsc --noEmit && npm run build   # Verify main still builds
 git push
-
-# Clean up
-git branch -d feature/capture-preview-overlay
-git push origin --delete feature/capture-preview-overlay   # if pushed
 ```
+
+> If remote is configured, **always push main after merge**.
+
+### 7. Clean up — present two options to the user
+
+After the merge is complete and pushed, ask:
+
+```
+Feature branch merged to main.
+1. 🗑️ Delete the feature branch.
+2. 📌 Keep the feature branch (decide later).
+```
+
+| Option | Action |
+|---|---|
+| **1 — Delete** | ```bash git branch -d feature/capture-preview-overlay ```<br>```bash git push origin --delete feature/capture-preview-overlay ``` |
+| **2 — Keep** | No action. Stay on `main`. Acknowledge: "Branch kept locally and remotely." |
 
 ---
 
