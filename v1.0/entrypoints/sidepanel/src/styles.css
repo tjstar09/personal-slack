@@ -490,6 +490,113 @@ h2 {
   cursor: wait;
 }
 
+/* Capture button group in top bar */
+.capture-button-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel-2);
+  padding: 2px;
+}
+
+.capture-button-group .command-button {
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  padding: 6px 10px;
+  gap: 6px;
+  min-height: 32px;
+  height: 32px;
+}
+
+.capture-button-group .command-button:hover {
+  background: var(--panel-3);
+}
+
+.capture-button-group .command-button:active {
+  background: var(--panel);
+}
+
+.capture-button-group .mode-badge {
+  min-width: 32px;
+  justify-content: center;
+  padding: 6px 8px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent);
+  background: rgba(37, 194, 160, 0.12);
+  border-radius: 6px;
+  border: 1px solid rgba(37, 194, 160, 0.25);
+}
+
+.capture-button-group .mode-badge:hover {
+  background: rgba(37, 194, 160, 0.2);
+  border-color: rgba(37, 194, 160, 0.4);
+}
+
+.capture-button-group .dropdown-toggle {
+  min-width: 32px;
+  justify-content: center;
+  padding: 6px 8px;
+  border-radius: 6px;
+}
+
+.capture-button-group .dropdown-toggle:hover {
+  background: var(--panel-3);
+}
+
+/* Capture dropdown */
+.capture-dropdown {
+  min-width: 200px;
+}
+
+.dropdown-divider {
+  border: none;
+  border-top: 1px solid var(--line);
+  margin: 4px 0;
+}
+
+.mode-selector {
+  padding: 8px 12px;
+}
+
+.mode-selector-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.mode-selector-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 10px;
+  border: none;
+  background: transparent;
+  color: var(--text);
+  font-size: 13px;
+  cursor: pointer;
+  text-align: left;
+  border-radius: 6px;
+}
+
+.mode-selector-item:hover {
+  background: rgb(99 102 241 / 0.15);
+}
+
+.mode-selector-item.active {
+  background: rgba(37, 194, 160, 0.15);
+  color: var(--accent);
+  font-weight: 600;
+}
+
 /* "More" dropdown in the top bar. Reuses slash-suggestions visuals but
    avoids its absolute positioning so portal-based fixed positioning works. */
 .top-more-menu {
