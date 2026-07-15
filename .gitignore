@@ -29,3 +29,6 @@ archive/**/oauth.txt
 # User data (bookmarks, conversation history, captured content — may contain secrets)
 v1.0/Files/
 v1.0/Files/**/*
+
+# Cline Skills Files
+.clinerules/skills
