@@ -142,5 +142,35 @@ export interface DraftPayload {
   tags: string[];
 }
 
+/** Capture mode for the capture button — determines how much metadata to extract. */
+export type CaptureMode = 'full' | 'standard' | 'minimal';
+
+/** Entry in the capture history dropdown. */
+export interface CaptureHistoryEntry {
+  id: string;
+  title: string;
+  url: string;
+  host: string;
+  favicon: string;
+  mode: CaptureMode;
+  timestamp: string; // ISO 8601
+  markdown: string;
+}
+
+/** Data returned from capturing a tab. */
+export interface TabCaptureData {
+  title: string;
+  url: string;
+  host: string;
+  metaDescription: string;
+  ogTitle: string;
+  ogDescription: string;
+  ogImage: string;
+  selectedText: string;
+  markdown: string;
+  mode: CaptureMode;
+  timestamp: string; // ISO 8601
+}
+
 /** Which view is active in the main panel. Controls routing-like UI switching. */
 export type ViewMode = 'chat' | 'gallery' | 'bookmarks' | 'settings';

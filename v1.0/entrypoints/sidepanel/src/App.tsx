@@ -70,7 +70,71 @@ import { loadWorkspace, saveWorkspace } from './storage';
 import { captureTab } from './captureTab';
 import { isSlashCommand, parseSlashCommand, executeMeltTabs, SLASH_COMMANDS, type SlashCommand } from './commands';
 import { MELTED_TABS_PAGE_ID } from './data';
-import type { Bookmark as SavedBookmark, Conversation, DriveSyncConfig, Message, Page, ViewMode, WorkspaceData } from './types';
+import type { Bookmark as SavedBookmark, CaptureHistoryEntry, CaptureMode, Conversation, DriveSyncConfig, Message, Page, TabCaptureData, ViewMode, WorkspaceData } from './types';
+
+// Chrome extension API type declarations
+type ChromeTab = {
+  id?: number;
+  url?: string;
+  title?: string;
+};
+
+type ChromeWindow = {
+  id?: number;
+};
+
+type ChromeMessageSender = {
+  tab?: ChromeTab;
+  id?: string;
+};
+
+type ChromeInjectionResult = {
+  result: any;
+};
+
+type ChromeBookmarkTreeNode = {
+  id: string;
+  title: string;
+  url?: string;
+};
+
+declare const chrome: {
+  tabs: {
+    query: (queryInfo: { active: boolean; currentWindow: boolean }) => Promise<ChromeTab[]>;
+    create: (createProperties: { url: string; active?: boolean }) => Promise<ChromeTab>;
+  };
+  windows: {
+    create: (createData: { url: string; width: number; height: number; left: number; top: number; type: 'popup' }) => Promise<ChromeWindow>;
+  };
+  runtime: {
+    onMessage: {
+      addListener: (listener: (message: any, sender: ChromeMessageSender, sendResponse: (response: any) => void) => void) => void;
+      removeListener: (listener: any) => void;
+    };
+    sendMessage: (message: any) => Promise<any>;
+  };
+  storage: {
+    local: {
+      get: (keys: string | string[], callback: (items: { [key: string]: any }) => void) => void;
+      set: (items: { [key: string]: any }, callback?: () => void) => void;
+      remove: (keys: string | string[], callback?: () => void) => void;
+    };
+  };
+  scripting: {
+    executeScript: (injection: { target: { tabId: number }; func: () => any }) => Promise<ChromeInjectionResult[]>;
+  };
+  bookmarks: {
+    create: (bookmark: { title: string; url: string }, callback?: (result: ChromeBookmarkTreeNode) => void) => void;
+  };
+  commands: {
+    onCommand: {
+      addListener: (listener: (command: string) => void) => void;
+    };
+  };
+  sidePanel: {
+    setOptions: (options: { path: string; tabId?: number }) => Promise<void>;
+  };
+};
 
 const emptyDraft = {
   body: '',
@@ -102,8 +166,19 @@ export function App({ fullWindow = false }: { fullWindow?: boolean }) {
   const [driveSyncBusy, setDriveSyncBusy] = useState(false);
   const restoreInputRef = useRef<HTMLInputElement>(null);
   const [captureBusy, setCaptureBusy] = useState(false);
+  const [captureMode, setCaptureMode] = useState<CaptureMode>('full');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
+  const [showCapturePreview, setShowCapturePreview] = useState(false);
+  const [capturePreviewData, setCapturePreviewData] = useState<TabCaptureData | null>(null);
+  const [captureHistory, setCaptureHistory] = useState<CaptureHistoryEntry[]>([]);
+  const [showHistoryDropdown, setShowHistoryDropdown] = useState(false);
+  const [showCaptureDropdown, setShowCaptureDropdown] = useState(false);
+  const [previewCollapsed, setPreviewCollapsed] = useState(true);
+  const historyButtonRef = useRef<HTMLButtonElement | null>(null);
+  const captureDropdownRef = useRef<HTMLDivElement | null>(null);
+  const [captureDropdownStyle, setCaptureDropdownStyle] = useState<React.CSSProperties>({});
+  const [historyDropdownStyle, setHistoryDropdownStyle] = useState<React.CSSProperties>({});
   const statusTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
@@ -113,12 +188,27 @@ export function App({ fullWindow = false }: { fullWindow?: boolean }) {
   const moreButtonRef = useRef<HTMLButtonElement | null>(null);
   const [moreMenuStyle, setMoreMenuStyle] = useState<React.CSSProperties>({});
   const moreMenuRef = useRef<HTMLDivElement | null>(null);
+  const captureButtonGroupRef = useRef<HTMLDivElement | null>(null);
 
   // Position the More menu relative to the button on open/reopen
   const positionMoreMenu = useCallback(() => {
     if (!moreButtonRef.current) return;
     const rect = moreButtonRef.current.getBoundingClientRect();
     setMoreMenuStyle({
+      position: 'fixed',
+      top: rect.bottom + 6,
+      right: window.innerWidth - rect.right,
+      left: 'auto',
+      bottom: 'auto',
+      zIndex: 9999,
+    });
+  }, []);
+
+  // Position the capture dropdown relative to the capture button group
+  const positionCaptureDropdown = useCallback(() => {
+    if (!captureButtonGroupRef.current) return;
+    const rect = captureButtonGroupRef.current.getBoundingClientRect();
+    setCaptureDropdownStyle({
       position: 'fixed',
       top: rect.bottom + 6,
       right: window.innerWidth - rect.right,
@@ -216,15 +306,38 @@ export function App({ fullWindow = false }: { fullWindow?: boolean }) {
     };
   }, [moreOpen]);
 
-  const handleCaptureTab = useCallback(async () => {
+  // Cycle capture mode: full → standard → minimal → full
+  const cycleCaptureMode = useCallback(() => {
+    setCaptureMode((prev) => {
+      if (prev === 'full') return 'standard';
+      if (prev === 'standard') return 'minimal';
+      return 'full';
+    });
+  }, []);
+
+  const handleCaptureTab = useCallback(async (mode?: CaptureMode) => {
+    const currentMode = mode || captureMode;
     setCaptureBusy(true);
     showToast('Capturing current tab...', 'success');
     try {
-      const data = await captureTab();
+      const data = await captureTab(currentMode);
       if (!data.markdown) {
         showToast('Could not capture this tab. It may be a chrome:// page.', 'error');
         return;
       }
+      // Add to capture history
+      const historyEntry: CaptureHistoryEntry = {
+        id: createId('capture'),
+        title: data.title || data.url,
+        url: data.url,
+        host: data.host,
+        favicon: `https://www.google.com/s2/favicons?domain=${data.host}&sz=32`,
+        mode: data.mode,
+        timestamp: data.timestamp,
+        markdown: data.markdown,
+      };
+      setCaptureHistory((prev) => [historyEntry, ...prev.slice(0, 9)]); // Keep last 10
+      
       setDraft((current) => ({ ...current, body: data.markdown, tags: 'capture' }));
       showToast(`Captured: ${data.title || data.url}`, 'success');
     } catch (error) {
@@ -232,7 +345,169 @@ export function App({ fullWindow = false }: { fullWindow?: boolean }) {
     } finally {
       setCaptureBusy(false);
     }
-  }, [showToast]);
+  }, [captureMode, showToast]);
+
+  const handleCaptureAndSend = useCallback(async () => {
+    const currentMode = captureMode;
+    setCaptureBusy(true);
+    showToast('Capturing current tab...', 'success');
+    try {
+      const data = await captureTab(currentMode);
+      if (!data.markdown) {
+        showToast('Could not capture this tab. It may be a chrome:// page.', 'error');
+        return;
+      }
+      // Add to capture history
+      const historyEntry: CaptureHistoryEntry = {
+        id: createId('capture'),
+        title: data.title || data.url,
+        url: data.url,
+        host: data.host,
+        favicon: `https://www.google.com/s2/favicons?domain=${data.host}&sz=32`,
+        mode: data.mode,
+        timestamp: data.timestamp,
+        markdown: data.markdown,
+      };
+      setCaptureHistory((prev) => [historyEntry, ...prev.slice(0, 9)]); // Keep last 10
+      
+      // Post directly to current conversation - compute selectedConv inline
+      const selectedConv = workspace.conversations.find(
+        (c) => c.id === workspace.selectedConversationId && c.pageId === workspace.selectedPageId
+      );
+      if (selectedConv) {
+        const userTags = getTagList(draft.tags);
+        const autoTags = inferAutoTags(data.markdown);
+        const tags = [...new Set([...userTags, ...autoTags, 'capture'])];
+        const nextWorkspace = addDraftToWorkspace(workspace, selectedConv.id, {
+          body: data.markdown,
+          tags,
+          pageId: draft.pageId || BOOKMARKS_PAGE_ID,
+        });
+        setWorkspace(nextWorkspace);
+        setDraft((current) => ({ ...current, body: '', tags: '' }));
+        
+        const addedBookmarks = nextWorkspace.bookmarks.slice(workspace.bookmarks.length);
+        await Promise.allSettled(addedBookmarks.map((bookmark) => addChromeBookmark(bookmark.url, bookmark.title)));
+        showToast(`Captured & sent to ${selectedConv.title}`, 'success');
+      } else {
+        // Fallback to draft
+        setDraft((current) => ({ ...current, body: data.markdown, tags: 'capture' }));
+        showToast(`Captured: ${data.title || data.url}`, 'success');
+      }
+    } catch (error) {
+      showToast(`Capture failed: ${error instanceof Error ? error.message : 'Unknown error'}`, 'error');
+    } finally {
+      setCaptureBusy(false);
+    }
+  }, [captureMode, showToast, workspace, draft]);
+
+  // Open capture preview popup
+  const openCapturePreview = useCallback((data: TabCaptureData) => {
+    setCapturePreviewData(data);
+    setShowCapturePreview(true);
+  }, []);
+
+  // Close capture preview popup
+  const closeCapturePreview = useCallback(() => {
+    setShowCapturePreview(false);
+    setCapturePreviewData(null);
+  }, []);
+
+  // Handle discard from preview
+  const handleDiscardCapture = useCallback(() => {
+    closeCapturePreview();
+  }, [closeCapturePreview]);
+
+  // Handle edit from preview - move to composer
+  const handleEditCapture = useCallback(() => {
+    if (capturePreviewData) {
+      setDraft((current) => ({ ...current, body: capturePreviewData!.markdown, tags: 'capture' }));
+      setPreviewCollapsed(false); // Auto-expand preview
+      closeCapturePreview();
+    }
+  }, [capturePreviewData, closeCapturePreview]);
+
+  // Handle send from preview
+  const handleSendCapture = useCallback(() => {
+    if (capturePreviewData) {
+      // Compute selectedConversation from workspace (already in deps)
+      const selectedConv = workspace.conversations.find(
+        (c) => c.id === workspace.selectedConversationId && c.pageId === workspace.selectedPageId
+      );
+      if (selectedConv) {
+        const userTags = getTagList(draft.tags);
+        const autoTags = inferAutoTags(capturePreviewData.markdown);
+        const tags = [...new Set([...userTags, ...autoTags, 'capture'])];
+        const nextWorkspace = addDraftToWorkspace(workspace, selectedConv.id, {
+          body: capturePreviewData.markdown,
+          tags,
+          pageId: draft.pageId || BOOKMARKS_PAGE_ID,
+        });
+        setWorkspace(nextWorkspace);
+        setDraft((current) => ({ ...current, body: '', tags: '' }));
+        
+        const addedBookmarks = nextWorkspace.bookmarks.slice(workspace.bookmarks.length);
+        Promise.allSettled(addedBookmarks.map((bookmark) => addChromeBookmark(bookmark.url, bookmark.title)));
+        showToast(`Capture posted to ${selectedConv.title}`, 'success');
+        closeCapturePreview();
+      }
+    }
+  }, [capturePreviewData, draft, workspace, closeCapturePreview]);
+
+  // Re-capture with new mode from preview
+  const handleRecapture = useCallback(async (newMode: CaptureMode) => {
+    setCaptureMode(newMode);
+    if (capturePreviewData) {
+      const data = await captureTab(newMode);
+      if (data.markdown) {
+        setCapturePreviewData(data);
+      }
+    }
+  }, [capturePreviewData]);
+
+  // Handle history item click
+  const handleHistoryItemClick = useCallback((entry: CaptureHistoryEntry) => {
+    setCapturePreviewData({
+      title: entry.title,
+      url: entry.url,
+      host: entry.host,
+      metaDescription: '',
+      ogTitle: '',
+      ogDescription: '',
+      ogImage: '',
+      selectedText: '',
+      markdown: entry.markdown,
+      mode: entry.mode,
+      timestamp: entry.timestamp,
+    });
+    setShowCapturePreview(true);
+    setShowHistoryDropdown(false);
+  }, []);
+
+  // Clear capture history
+  const clearCaptureHistory = useCallback(() => {
+    setCaptureHistory([]);
+    setShowHistoryDropdown(false);
+  }, []);
+
+  // Toggle history dropdown
+  const toggleHistoryDropdown = useCallback(() => {
+    setShowHistoryDropdown((prev) => !prev);
+  }, []);
+
+  // Position history dropdown
+  const positionHistoryDropdown = useCallback(() => {
+    if (!historyButtonRef.current) return;
+    const rect = historyButtonRef.current.getBoundingClientRect();
+    setHistoryDropdownStyle({
+      position: 'fixed',
+      top: rect.bottom + 6,
+      right: window.innerWidth - rect.right,
+      left: 'auto',
+      bottom: 'auto',
+      zIndex: 9999,
+    });
+  }, []);
 
   // Open full window
   const openFullWindow = useCallback(() => {
@@ -778,15 +1053,93 @@ export function App({ fullWindow = false }: { fullWindow?: boolean }) {
             <h2>{selectedConversation?.title || 'No conversation selected'}</h2>
           </div>
           <div className="top-actions">
-            <button
-              className="command-button"
-              onClick={handleCaptureTab}
-              disabled={captureBusy}
-              title="Capture current tab"
-            >
-              <ExternalLink size={16} />
-              <span>{captureBusy ? 'Capturing...' : 'Capture'}</span>
-            </button>
+            <div className="capture-button-group" ref={captureButtonGroupRef}>
+              <button
+                className="command-button"
+                onClick={() => handleCaptureTab()}
+                disabled={captureBusy}
+                title="Capture current tab (opens preview)"
+              >
+                <ExternalLink size={16} />
+                <span>{captureBusy ? 'Capturing...' : 'Capture'}</span>
+              </button>
+              <button
+                className="command-button mode-badge"
+                onClick={cycleCaptureMode}
+                disabled={captureBusy}
+                title={`Current mode: ${captureMode.charAt(0).toUpperCase() + captureMode.slice(1)}. Click to cycle.`}
+              >
+                <span className="mode-badge-text">
+                  {captureMode === 'full' ? 'F' : captureMode === 'standard' ? 'S' : 'M'}
+                </span>
+              </button>
+              <button
+                className="command-button dropdown-toggle"
+                onClick={() => {
+                  positionCaptureDropdown();
+                  setShowCaptureDropdown((prev) => !prev);
+                }}
+                aria-expanded={showCaptureDropdown}
+                aria-haspopup="true"
+                title="Capture options"
+              >
+                <ChevronDown size={14} />
+              </button>
+            </div>
+            {showCaptureDropdown &&
+              createPortal(
+                <div
+                  ref={captureDropdownRef}
+                  className="slash-suggestions top-more-menu capture-dropdown"
+                  onMouseDown={(event) => event.preventDefault()}
+                  style={{ ...captureDropdownStyle, pointerEvents: 'auto' }}
+                >
+                  <button
+                    className="slash-suggestion-item"
+                    onMouseDown={(event) => {
+                      event.preventDefault();
+                      handleCaptureTab();
+                      setShowCaptureDropdown(false);
+                    }}
+                  >
+                    <span className="slash-suggestion-name">
+                      <ExternalLink size={14} />
+                      Capture to Draft (Preview)
+                    </span>
+                  </button>
+                  <button
+                    className="slash-suggestion-item"
+                    onMouseDown={(event) => {
+                      event.preventDefault();
+                      handleCaptureAndSend();
+                      setShowCaptureDropdown(false);
+                    }}
+                  >
+                    <span className="slash-suggestion-name">
+                      <Send size={14} />
+                      Capture & Send
+                    </span>
+                  </button>
+                  <hr className="dropdown-divider" />
+                  <div className="mode-selector">
+                    <span className="mode-selector-label">Mode:</span>
+                    {(['full', 'standard', 'minimal'] as CaptureMode[]).map((mode) => (
+                      <button
+                        key={mode}
+                        className={`mode-selector-item ${captureMode === mode ? 'active' : ''}`}
+                        onMouseDown={(event) => {
+                          event.preventDefault();
+                          setCaptureMode(mode);
+                          setShowCaptureDropdown(false);
+                        }}
+                      >
+                        {mode === 'full' ? '📸 Full' : mode === 'standard' ? '📋 Standard' : '🔗 Minimal'}
+                      </button>
+                    ))}
+                  </div>
+                </div>,
+                document.body
+              )}
             {toast && (
               <div className={`toast toast-${toast.type}`}>
                 <span>{toast.type === 'success' ? '✓' : '!'}</span>

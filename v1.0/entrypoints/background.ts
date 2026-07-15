@@ -160,6 +160,8 @@ export default defineBackground(() => {
   });
 });
 
+import type { CaptureMode } from './sidepanel/src/types';
+
 /**
  * Build a quick markdown body from a tab's title, URL, and optional selected text.
  * This is used for the "fast capture" path (context menu, keyboard shortcut).
@@ -170,21 +172,62 @@ export default defineBackground(() => {
  *   This inline formatter provides a solid fallback with just the data points
  *   available to the worker (title, URL from chrome.tabs).
  */
-function buildQuickCaptureBody(title: string, url: string, selectedText: string): string {
+function buildQuickCaptureBody(title: string, url: string, selectedText: string, mode: CaptureMode = 'full'): string {
   const lines: string[] = [];
-  lines.push(`## [${title || url}](${url})`);
+  const host = extractHost(url);
+  const timestamp = new Date().toISOString();
+  const relativeTime = formatRelativeTime(timestamp);
+  
+  // Mode badge emoji
+  const modeEmoji = mode === 'full' ? '📸' : mode === 'standard' ? '📋' : '🔗';
+  const modeLabel = mode.charAt(0).toUpperCase() + mode.slice(1);
+
+  // Title with link + mode badge + relative time
+  lines.push(`${modeEmoji} **${modeLabel} Capture** · [${title || url}](${url}) · *${host}* · Captured ${relativeTime}`);
   lines.push('');
-  lines.push(`**Source**: ${extractHost(url)}`);
+  lines.push('---');
   lines.push('');
 
-  if (selectedText) {
-    lines.push('---');
+  // Full mode includes description (if we had it, but background doesn't)
+  if (mode === 'full') {
+    lines.push('*Full capture would include OG image, description, and selected text*');
     lines.push('');
-    lines.push('> ' + selectedText.trim().replace(/\n/g, '\n> '));
+    lines.push('---');
     lines.push('');
   }
 
+  if (selectedText) {
+    if (mode === 'standard' || mode === 'full') {
+      lines.push('---');
+      lines.push('');
+      lines.push('> ' + selectedText.trim().replace(/\n/g, '\n> '));
+      lines.push('');
+      lines.push('---');
+      lines.push('');
+    }
+  }
+
+  // Minimal mode only shows title + URL (already done above)
+  
+  // Footer with ISO timestamp
+  lines.push(`*Captured at ${timestamp} from ${host}*`);
+
   return lines.join('\n').trim();
+}
+
+function formatRelativeTime(isoString: string): string {
+  const date = new Date(isoString);
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffSecs = Math.floor(diffMs / 1000);
+  const diffMins = Math.floor(diffSecs / 60);
+  const diffHours = Math.floor(diffMins / 60);
+  const diffDays = Math.floor(diffHours / 24);
+
+  if (diffSecs < 60) return `${diffSecs}s ago`;
+  if (diffMins < 60) return `${diffMins}m ago`;
+  if (diffHours < 24) return `${diffHours}h ago`;
+  return `${diffDays}d ago`;
 }
 
 function extractHost(url: string): string {

@@ -11,6 +11,11 @@
  * button in the top bar. It produces richer output than the background
  * worker's inline capture (which only has title + URL available).
  *
+ * Supports three capture modes:
+ *   - Full (default): OG tags + meta desc + selected text + OG image + enhanced formatting
+ *   - Standard: Title + URL + meta description + selected text
+ *   - Minimal: Title + URL only
+ *
  * =====================================================================
  * WHY chrome.scripting.executeScript
  * =====================================================================
@@ -40,6 +45,8 @@
  * The fallback markdown is always valid because buildCaptureMarkdown
  * handles empty metadata gracefully.
  */
+import type { CaptureMode } from './types';
+
 export interface TabCaptureData {
   title: string;
   url: string;
@@ -50,12 +57,14 @@ export interface TabCaptureData {
   ogImage: string;
   selectedText: string;
   markdown: string;
+  mode: CaptureMode;
+  timestamp: string; // ISO 8601
 }
 
 // Track if script injection succeeded at module level for the first run
 let scriptInjectionSucceeded = false;
 
-export const captureTab = async (): Promise<TabCaptureData> => {
+export const captureTab = async (mode: CaptureMode = 'full'): Promise<TabCaptureData> => {
   try {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
     if (!tab?.id || !tab.url) {
@@ -63,6 +72,7 @@ export const captureTab = async (): Promise<TabCaptureData> => {
       return {
         title: '', url: '', host: '', metaDescription: '',
         ogTitle: '', ogDescription: '', ogImage: '', selectedText: '', markdown: '',
+        mode, timestamp: new Date().toISOString(),
       };
     }
 
@@ -98,15 +108,17 @@ export const captureTab = async (): Promise<TabCaptureData> => {
 
     const markdown = buildCaptureMarkdown({
       title, url, host, metaDescription, ogTitle, ogDescription, ogImage, selectedText, markdown: '',
+      mode, timestamp: new Date().toISOString(),
     });
 
-    return { title, url, host, metaDescription, ogTitle, ogDescription, ogImage, selectedText, markdown };
+    return { title, url, host, metaDescription, ogTitle, ogDescription, ogImage, selectedText, markdown, mode, timestamp: new Date().toISOString() };
   } catch {
     // Complete failure — return empty result. App.tsx handles this with an error message
     // outside this function to avoid coupling error UI with extraction logic.
     return {
       title: '', url: '', host: '', metaDescription: '',
       ogTitle: '', ogDescription: '', ogImage: '', selectedText: '', markdown: '',
+      mode, timestamp: new Date().toISOString(),
     };
   }
 };
@@ -151,45 +163,86 @@ function extractHost(url: string): string {
 function buildCaptureMarkdown(data: TabCaptureData): string {
   const lines: string[] = [];
 
-  // Title with link
+  // Mode badge emoji
+  const modeEmoji = data.mode === 'full' ? '📸' : data.mode === 'standard' ? '📋' : '🔗';
+  const modeLabel = data.mode.charAt(0).toUpperCase() + data.mode.slice(1);
+
+  // Title with link + mode badge
   if (data.title) {
-    lines.push(`## [${data.title}](${data.url})`);
+    lines.push(`${modeEmoji} **${modeLabel} Capture** · [${data.title}](${data.url}) · *${data.host}* · Captured ${formatRelativeTime(data.timestamp)}`);
   } else {
-    lines.push(`## [${data.url}](${data.url})`);
+    lines.push(`${modeEmoji} **${modeLabel} Capture** · [${data.url}](${data.url}) · *${data.host}* · Captured ${formatRelativeTime(data.timestamp)}`);
   }
 
   lines.push('');
-  lines.push(`**Source**: ${data.host}`);
+  lines.push('---');
   lines.push('');
 
-  // OG image
-  if (data.ogImage) {
-    lines.push(`![](${data.ogImage})`);
-    lines.push('');
+  // Full mode: include OG image, OG title, description, selected text
+  if (data.mode === 'full') {
+    // OG image
+    if (data.ogImage) {
+      lines.push(`![](${data.ogImage})`);
+      lines.push('');
+    }
+
+    // OG title (if different from page title)
+    if (data.ogTitle && data.ogTitle !== data.title) {
+      lines.push(`**${data.ogTitle}**`);
+      lines.push('');
+    }
+
+    // Description — prefer OG over standard meta
+    const description = data.ogDescription || data.metaDescription;
+    if (description) {
+      lines.push(`**Description**: ${description}`);
+      lines.push('');
+      lines.push('---');
+      lines.push('');
+    }
+
+    // Selected text — formatted as a blockquote
+    if (data.selectedText) {
+      lines.push('> ' + data.selectedText.trim().replace(/\n/g, '\n> '));
+      lines.push('');
+      lines.push('---');
+      lines.push('');
+    }
   }
 
-  // OG title (if different from page title)
-  // This handles cases where og:title is the original article title
-  // while the visible page title has been modified with site branding.
-  if (data.ogTitle && data.ogTitle !== data.title) {
-    lines.push(`**${data.ogTitle}**`);
-    lines.push('');
+  // Standard mode: title + URL + meta description + selected text
+  if (data.mode === 'standard') {
+    const description = data.ogDescription || data.metaDescription;
+    if (description) {
+      lines.push(description);
+      lines.push('');
+    }
+    if (data.selectedText) {
+      lines.push('---');
+      lines.push('');
+      lines.push('> ' + data.selectedText.trim().replace(/\n/g, '\n> '));
+      lines.push('');
+    }
   }
 
-  // Description — prefer OG over standard meta
-  const description = data.ogDescription || data.metaDescription;
-  if (description) {
-    lines.push(description);
-    lines.push('');
-  }
-
-  // Selected text — formatted as a blockquote
-  if (data.selectedText) {
-    lines.push('---');
-    lines.push('');
-    lines.push('> ' + data.selectedText.trim().replace(/\n/g, '\n> '));
-    lines.push('');
-  }
+  // Minimal mode: title + URL only (already rendered above)
+  // Footer with ISO timestamp
+  lines.push(`*Captured at ${data.timestamp} from ${data.host}*`);
 
   return lines.join('\n').trim();
+}
+
+function formatRelativeTime(isoString: string): string {
+  const date = new Date(isoString);
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffSecs = Math.floor(diffMs / 1000);
+  const diffMins = Math.floor(diffSecs / 60);
+  const diffHours = Math.floor(diffMins / 60);
+  const diffDays = Math.floor(diffHours / 24);
+
+  if (diffSecs < 60) return `${diffSecs}s ago`;
+  if (diffMins < 60) return `${diffMins}m ago`;
+  if (diffHours < 24) return `${diffHours}h ago`;
+  return `${diffDays}d ago`;
 }
