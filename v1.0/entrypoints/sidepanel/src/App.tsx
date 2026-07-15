@@ -619,6 +619,7 @@ export function App({ fullWindow = false }: { fullWindow?: boolean }) {
     if (!sendToMessage) return;
     const messageId = sendToMessage.id;
     const targetPageName = workspace.pages.find((p) => p.id === pageId)?.name || 'page';
+    const timestamp = new Date().toISOString();
 
     setWorkspace((current) => {
       // Choose a destination conversation on the target page (prefer a
@@ -628,6 +629,12 @@ export function App({ fullWindow = false }: { fullWindow?: boolean }) {
         current.conversations.find((c) => c.pageId === pageId);
       const destinationId = destination?.id || createId('conversation');
       const needsNewConversation = !destination;
+
+      // Get the moved message to use its body for the conversation summary
+      const movedMessage = current.messages.find((msg) => msg.id === messageId);
+      const newSummary = movedMessage
+        ? movedMessage.body.replace(/\s+/g, ' ').slice(0, 140)
+        : 'Moved message';
 
       return {
         ...current,
@@ -639,19 +646,23 @@ export function App({ fullWindow = false }: { fullWindow?: boolean }) {
                 id: destinationId,
               },
             ]
-          : current.conversations,
+          : current.conversations.map((conversation) =>
+              conversation.id === destinationId
+                ? { ...conversation, summary: newSummary, updatedAt: timestamp }
+                : conversation,
+            ),
         messages: current.messages.map((msg) =>
-          msg.id === messageId ? { ...msg, conversationId: destinationId, pageId, updatedAt: new Date().toISOString() } : msg,
+          msg.id === messageId ? { ...msg, conversationId: destinationId, pageId, updatedAt: timestamp } : msg,
         ),
         bookmarks: current.bookmarks.map((bookmark) =>
           bookmark.messageId === messageId
-            ? { ...bookmark, conversationId: destinationId, pageId, updatedAt: new Date().toISOString() }
+            ? { ...bookmark, conversationId: destinationId, pageId, updatedAt: timestamp }
             : bookmark,
         ),
         // Surface the destination so the moved message is immediately visible.
         selectedPageId: pageId,
         selectedConversationId: destinationId,
-        updatedAt: new Date().toISOString(),
+        updatedAt: timestamp,
       };
     });
 

@@ -90,6 +90,12 @@ All known bugs, their fixes, and how to avoid repeating them.
 - **Fix**: Added overlay CSS: `.sendto-overlay` / `.onboarding-overlay` are now `position: fixed; inset: 0; z-index: 9999` flex-centered modals with a dimmed backdrop. `.sendto-card` / `.onboarding-card` are centered cards. The inner `.sendto-card .slash-suggestions` is neutralized to `position: static` so the page list flows normally inside the card; items get a bordered, clickable style.
 - **Avoid**: Any new overlay/modal (overlay + card pattern) must have its own fixed/absolute positioning CSS. Do not reuse `.slash-suggestions` (which is absolutely positioned for the composer) inside a container without resetting `position` to `static`.
 
+### Issue 15 — Send-to-page doesn't update conversation summary in sidebar
+- **Symptom**: After moving the latest message to another page via "Send to page", the sidebar conversation list still shows the old message preview in the source conversation, and the destination conversation doesn't show the moved message as its latest preview.
+- **Cause**: `handleSendToPage` moved the message and bookmarks but didn't update the destination conversation's `summary` (first 140 chars of message body) and `updatedAt` timestamp. The sidebar sorts conversations by `updatedAt` and displays `summary`, so both pages showed stale data.
+- **Fix**: In `handleSendToPage`, extract the moved message's body and update the destination conversation's `summary` and `updatedAt` fields. Also update the moved message's `updatedAt` and bookmarks' `updatedAt` for consistency.
+- **Avoid**: When moving messages between conversations, always update the destination conversation's metadata (`summary`, `updatedAt`, `tags`) so the sidebar reflects the change immediately.
+
 ---
 
 ## Historical Pitfalls (from v0.2 → v1.0 migration)
