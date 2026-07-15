@@ -14,8 +14,11 @@ Before writing any code, read the following **in this order**:
 4. **`docs/04-ARCHITECTURE.md`** (if understanding data flow or design)
 5. **`docs/05-BUILD.md`** (if building or verifying)
 6. **`docs/06-AGENTS.md`** (if invoking an agent or working in a skill-covered domain)
-7. **`docs/08-DOCUMENTATION.md`** (if contributing changes — read to understand which docs to update and when)
-8. **Relevant skill files** from `.agents/skills/` (see `docs/06-AGENTS.md`)
+7. **`docs/07-ELEMENT-REFERENCE.md`** (if addressing or modifying UI elements — provides friendly names, hierarchy, position, neighbors, and CSS selectors)
+8. **`docs/08-DOCUMENTATION.md`** (if contributing changes — read to understand which docs to update and when)
+9. **`docs/09-GIT-WORKFLOW.md`** (mandatory — read before creating branches or committing)
+10. **`docs/10-CAPTURE-FEATURE-PLAN.md`** (only if working on the capture button overhaul)
+11. **Relevant skill files** from `.agents/skills/` (see `docs/06-AGENTS.md`)
 
 Do not read all docs — read only what your task needs. See `docs/00-START.md` for the routing table.
 
