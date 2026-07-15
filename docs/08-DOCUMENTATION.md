@@ -13,11 +13,12 @@ Update the relevant docs whenever you:
 - **Modify UI elements** — update `07-ELEMENT-REFERENCE.md`
 - **Refactor code without behavior change** — no doc update required unless it affects understanding of the system
 - **Add or update a skill** — update `06-AGENTS.md` with the new skill entry, description, and file path
+- **All tasks (including styling/design/refactor/docs updates)** — must follow `docs/09-GIT-WORKFLOW.md` (feature branch, build verify, push, review, merge on approval)
 
 ## Required Docs by Change Type
 
 | Change Type | Required Updates |
-|-------------|------------------|
+|---|---|
 | Bug fix | `03-BUGS.md` (add issue entry with symptom/cause/fix/avoidance) |
 | New feature | `02-FEATURES.md` (add checklist item), possibly `04-ARCHITECTURE.md` |
 | UI change | `07-ELEMENT-REFERENCE.md` if element Addressing, hierarchy, or neighbors change |
@@ -25,6 +26,19 @@ Update the relevant docs whenever you:
 | Architecture change | `04-ARCHITECTURE.md`, possibly `01-REPOMAP.md` if file responsibilities shift |
 | Add/update workspace skill in `.agents/skills/` | `06-AGENTS.md` (add entry to workspace skills table with task type and skill file path) |
 | Add/update Cline-specific skill in `.clinerules/skills/` | `06-AGENTS.md` (add entry to Cline-specific skills table with skill name and purpose) |
+| **All tasks** | **Must follow `docs/09-GIT-WORKFLOW.md` (branch, build verify, push, review, merge on approval)** |
+
+## Planning Phase Requirement
+
+Every planning response must include:
+1. A `task_progress` checklist tracking all steps
+2. Git workflow steps explicitly listed:
+   - Create feature branch
+   - Verify build passes
+   - Push branch before review
+   - Present exactly 3 approval options
+   - Merge only on approval
+   - Clean up branch after merge
 
 ## Bug Documentation Format
 

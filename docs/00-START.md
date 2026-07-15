@@ -41,6 +41,17 @@ For the full procedure, see `docs/09-GIT-WORKFLOW.md`.
 | **Chrome extension / WXT** | `01-REPOMAP.md` → `.agents/skills/chrome-wiki/skills.md` |
 | **Find what version does X** | `02-FEATURES.md` |
 | **Understand data flow** | `04-ARCHITECTURE.md` |
+| **All tasks (including styling/design/refactor)** | **Must follow `09-GIT-WORKFLOW.md`** |
+
+## Mandatory Planning Checklist
+
+**Before writing any code or making any changes**, complete these steps:
+
+1. [ ] **Create feature branch**: `git checkout -b feature/<name>` from `main`
+2. [ ] **Verify build**: `cd v1.0 && npx tsc --noEmit && npm run build` (must pass)
+3. [ ] **Plan includes**: Git workflow steps (branch, commit, push, present 3 options, merge only on approval)
+
+This checklist is mandatory for **all** tasks — features, bug fixes, styling, refactors, documentation updates, etc.
 
 ---
 
@@ -68,6 +79,29 @@ Before working in a covered domain, read the relevant skill:
 | `.agents/skills/github-formatting/skills.md` | GitHub URL formatting |
 | `.agents/skills/js-text-library/skills.md` | Anime.js text animation |
 | `.agents/skills/transformer.js/skills.md` | Transformers.js, ONNX, local AI inference |
+| **`.clinerules/skills/frontend-design/skills.md`** | Frontend design, styling, aesthetics, production-grade UI |
+
+## Git Workflow Enforcement
+
+**All tasks must follow the branch and merge strategy documented in `docs/09-GIT-WORKFLOW.md`.**
+
+This is not optional. The workflow applies to:
+- New features
+- Bug fixes
+- Styling / design changes
+- Refactors
+- Documentation updates
+- Any change to the codebase
+
+The core rules are:
+1. Always create a `feature/<name>` branch from `main`
+2. Verify build passes before committing
+3. Push the feature branch before asking for review
+4. Present exactly 3 approval options
+5. Merge to `main` only after explicit approval
+6. Clean up feature branch after merge
+
+See `docs/09-GIT-WORKFLOW.md` for the complete procedure.
 
 ---
 
