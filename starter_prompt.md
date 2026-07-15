@@ -18,13 +18,17 @@ Before writing any code, read the following **in this order**:
 8. **`docs/08-DOCUMENTATION.md`** (if contributing changes — read to understand which docs to update and when)
 9. **`docs/09-GIT-WORKFLOW.md`** (mandatory — read BEFORE altering any code)
 10. **`docs/10-CAPTURE-FEATURE-PLAN.md`** (only if working on the capture button overhaul)
-11. **Relevant skill files** from `.agents/skills/` (see `docs/06-AGENTS.md`)
+11. **Relevant skill files** from `.agents/skills/` and `.clinerules/skills/` (see `docs/06-AGENTS.md`)
 
 Do not read all docs — read only what your task needs. See `docs/00-START.md` for the routing table.
 
 ---
 
-## 2. Your Mission
+## 2. Default Skill Enforcement
+
+If `.agents/skills/caveman/` exists, treat **Caveman** as the default coder workflow for all operations from this point onward. Use the relevant Caveman skill for routine coding operations unless the task explicitly requires a different workflow.
+
+## 3. Your Mission
 
 1. Read the files listed in your routing above (mandatory)
 2. Read the minimum source files needed
