@@ -10,6 +10,24 @@ Before writing any code, read the files in the order specified by your task belo
 
 ---
 
+## Branch & Merge Strategy — READ BEFORE ALTERING ANY CODE
+
+**Core Rules (must follow before any code change):**
+
+- **Always branch first**: Create `feature/<name>` from `main`. Never commit directly to `main`.
+- **Verify before commit**: Run `cd v1.0 && npx tsc --noEmit && npm run build` and ensure it passes.
+- **Push before review**: Push the feature branch to GitHub (if remote exists) before asking for approval.
+- **Present exactly 3 options**: After pushing, show the user:
+  1. ✅ Changes approved. Merge to main.
+  2. 🔧 Changes working but need more modifications.
+  3. ❌ Changes not working. Investigate and fix.
+- **Merge only on approval**: Only merge to `main` after the user selects option 1.
+- **Clean up**: After merge, ask whether to delete or keep the feature branch.
+
+For the full procedure, see `docs/09-GIT-WORKFLOW.md`.
+
+---
+
 ## Routing: Which Docs to Read
 
 | If your task is… | Read these files in order |
