@@ -45,6 +45,19 @@ Current active version. Older v0.1/v0.2 features are archived in collapsible blo
 - [x] Send-to-page popup overlay (matches onboarding styling)
 - [x] Custom PageSelect component (replaces browser-native dropdown)
 
+## v1.0 Design Migration — Neobrutalism (✅ Done)
+
+- [x] Migrate from Custom Dark Theme to Neobrutalism design system
+- [x] Light-only theme with warm off-white surface (`#FBFBF9`)
+- [x] Bold 3px borders on all interactive elements using navy (`#1C293C`)
+- [x] Yellow primary accent (`#FDC800`), purple secondary (`#432DD7`)
+- [x] Offset hover states with `translate(-2px, -2px)`
+- [x] Inter + JetBrains Mono typography via Google Fonts
+- [x] Sharp corners (4px max radius) on primary buttons
+- [x] 3px focus outlines for accessibility
+- [x] Both sidepanel and popup entrypoints updated
+- [x] DESIGN.md updated with new tokens and patterns
+
 ## v1.0 Phase 3 — Local AI Teammate (🔄 Planned)
 
 - [ ] Transformers.js integration with `Xenova/all-MiniLM-L6-v2`

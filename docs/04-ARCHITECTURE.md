@@ -72,6 +72,27 @@ Context menu click / keyboard shortcut
 
 ---
 
+## Design System (v1.0 — Neobrutalism Migration)
+
+### Design Language: Neobrutalism (from `.agents/skills/awesome-design-skills-main/skills/neobrutalism/`)
+- **Light-only theme** with warm off-white surface (`#FBFBF9`)
+- **Bold 3px borders** on all interactive elements using navy (`#1C293C`)
+- **Yellow primary accent** (`#FDC800`), **purple secondary** (`#432DD7`)
+- **Offset hover states** with `translate(-2px, -2px)`
+- **Inter + JetBrains Mono** typography via Google Fonts
+- **Sharp corners** (4px max radius) on primary buttons
+- **3px focus outlines** for accessibility
+- No gradients, glows, or subtle shadows — borders provide elevation
+
+### Migration Notes (2025-07-16)
+- Previous design: Custom Dark Theme (teal accent `#25c2a0`, dark backgrounds `#111418`)
+- Updated: `DESIGN.md` (design tokens), `v1.0/entrypoints/sidepanel/src/styles.css` (full CSS migration)
+- Both `sidepanel` and `popup` entrypoints share the same stylesheet
+- Font imports changed from Outfit/Geist to Inter/JetBrains Mono
+- Legacy CSS variables aliased to new Neobrutalism tokens for backward compatibility
+
+---
+
 ## Data Flow
 
 ```
