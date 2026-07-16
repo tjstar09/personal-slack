@@ -14,6 +14,9 @@ Current active version. Older v0.1/v0.2 features are archived in collapsible blo
 - [x] "Full" button opens 90% popup window
 - [x] `entrypoints/popup/` — separate entrypoint rendering `<App fullWindow={true} />`
 - [x] Sidebar toggle via brand icon (PanelRightOpen/PanelRightClose)
+- [x] Capture Modes (Full / Standard / Minimal) — dropdown UI on capture button for flexible content capture
+- [x] Enhanced capture message format — mode badge emoji, relative timestamp, host, ISO timestamp footer
+- [x] Toast notifications for capture feedback (success/error)
 
 ## v1.0 Phase 2 — Tab Melting & Slash Commands (✅ Done)
 

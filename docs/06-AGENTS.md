@@ -2,11 +2,12 @@
 
 ## Skill Directories
 
-This project uses two skill directories:
+This project uses three skill directories:
 
 | Directory | Purpose | Version Control |
 |-----------|---------|-----------------|
 | `.agents/skills/` | Workspace-specific skills, committed to git | Tracked |
+| `.agents/skills/awesome-design-skills-main/skills/` | Design system skills (67 design languages), committed to git | Tracked |
 | `.clinerules/skills/` | Cline-native skills, excluded from gitignore | Ignored |
 
 ## Workspace Skills (`.agents/skills/`)
@@ -26,6 +27,108 @@ Before working in a covered domain, read the relevant skill file from `.agents/s
 | Caveman help workflows | `.agents/skills/caveman-help/SKILL.md` |
 | Caveman review workflows | `.agents/skills/caveman-review/SKILL.md` |
 | Caveman stats workflows | `.agents/skills/caveman-stats/SKILL.md` |
+
+## Design System Skills (`.agents/skills/awesome-design-skills-main/skills/`)
+
+A curated registry of **67 design system skills** for AI-powered agentic tools. Each skill lives in its own folder under `skills/` with:
+- `SKILL.md` — AI-agent instruction file (tokens, component rules, accessibility, quality gates)
+- `DESIGN.md` — Human-readable design intent, rationale, and implementation notes
+
+The complete registry is defined in `.agents/skills/awesome-design-skills-main/skills/index.json` (slug-keyed map for fast lookups).
+
+### Available Design Skills (67)
+
+| Design | Slug | Description |
+|--------|------|-------------|
+| Agentic | `agentic` | AI-native design for agentic interfaces |
+| Ant Design | `ant` | Ant Design system adaptation |
+| Artistic | `artistic` | Expressive, creative visual language |
+| Basic | `basic` | Foundational, no-frills design |
+| Bento | `bento` | Grid-based bento box layouts |
+| Bold | `bold` | High-contrast, assertive visual weight |
+| Brutalism | `brutalism` | Raw, unpolished, honest materials |
+| Cafe | `cafe` | Warm, inviting, coffee-shop aesthetic |
+| Claymorphism | `claymorphism` | Soft 3D clay-like UI elements |
+| Clean | `clean` | Crisp, orderly, minimal visual noise |
+| Colorful | `colorful` | Vibrant, expressive color usage |
+| Contemporary | `contemporary` | Modern, current design trends |
+| Corporate | `corporate` | Professional, enterprise-ready |
+| Cosmic | `cosmic` | Space-inspired, deep gradients |
+| Creative | `creative` | Imaginative, unconventional patterns |
+| Dithered | `dithered` | Retro dithering texture effects |
+| Doodle | `doodle` | Hand-drawn, sketchy personality |
+| Dramatic | `dramatic` | High contrast, theatrical lighting |
+| Editorial | `editorial` | Magazine-style typographic layouts |
+| Enterprise | `enterprise` | Scalable, governance-ready systems |
+| Expressive | `expressive` | Emotion-driven, dynamic visuals |
+| Fantasy | `fantasy` | Magical, otherworldly aesthetics |
+| Fiction | `fiction` | Narrative-driven design language |
+| Flat | `flat` | 2D, no shadows or depth |
+| Friendly | `friendly` | Approachable, warm, rounded |
+| Futuristic | `futuristic` | Sci-fi, forward-looking aesthetics |
+| Geometric | `geometric` | Shape-driven, mathematical precision |
+| Glassmorphism | `glassmorphism` | Frosted glass, translucent layers |
+| Gradient | `gradient` | Rich gradient-based color system |
+| Immersive | `immersive` | Full-bleed, enveloping experiences |
+| Impeccable | `impeccable` | Pixel-perfect, refined craftsmanship |
+| Levels | `levels` | Layered depth and hierarchy |
+| Lingo | `lingo` | Typography-centric, word-focused |
+| Material | `material` | Google Material Design adaptation |
+| Matrix | `matrix` | Terminal/code-inspired monospace |
+| Minimal | `minimal` | Whitespace, restraint, clarity |
+| Modern | `modern` | Current best practices, clean |
+| Mono | `mono` | Monochromatic, single-hue focus |
+| Neobrutalism | `neobrutalism` | Bold borders, raw aesthetics |
+| Neon | `neon` | Glowing, dark-mode neon accents |
+| Neumorphism | `neumorphism` | Soft extruded, tactile surfaces |
+| Pacman | `pacman` | Retro gaming, pixel-art inspired |
+| Paper | `paper` | Physical paper texture, layers |
+| Perspective | `perspective` | 3D depth, spatial awareness |
+| Power | `power` | High-energy, dynamic impact |
+| Premium | `premium` | Luxury, high-end polish |
+| Professional | `professional` | Business-appropriate, trustworthy |
+| Pulse | `pulse` | Rhythmic, animated vitality |
+| Refined | `refined` | Polished, sophisticated details |
+| Retro | `retro` | Vintage, nostalgic references |
+| Riso | `riso` | Risograph print texture aesthetic |
+| Roku | `roku` | TV interface, 10-foot experience |
+| Sega | `sega` | 90s gaming, blue-sky aesthetic |
+| Shadcn | `shadcn` | shadcn/ui component style |
+| Sketch | `sketch` | Hand-sketched, wireframe feel |
+| Skeumorphism | `skeumorphism` | Real-world material metaphors |
+| Sleek | `sleek` | Smooth, streamlined, polished |
+| Spacious | `spacious` | Generous whitespace, breathing room |
+| Square | `square` | Sharp corners, grid alignment |
+| Stitch | `stitch` | Sewn, crafted, textile texture |
+| Storytelling | `storytelling` | Narrative flow, sequential design |
+| Terracotta | `terracotta` | Earthy, warm clay tones |
+| Tetris | `tetris` | Block-based, modular grid |
+| Vibrant | `vibrant` | High-saturation, energetic color |
+| Vintage | `vintage` | Aged, time-worn patina |
+
+### Design Skill Usage Rules
+
+**⚠️ CRITICAL: Single Design Rule**
+- **Only ONE design skill may be active at a time.** Do not load multiple design skills simultaneously.
+- The active design is defined in the root `DESIGN.md` file.
+- When the user requests a design change, load the selected skill's `SKILL.md` and update `DESIGN.md` accordingly.
+
+**Design Selection Workflow:**
+1. User expresses interest in a design (e.g., "use glassmorphism")
+2. AI reads the skill's `SKILL.md` from `.agents/skills/awesome-design-skills-main/skills/<slug>/SKILL.md`
+3. AI reads the skill's `DESIGN.md` for human context
+4. AI updates the root `DESIGN.md` with the new design tokens and patterns
+5. AI implements the design in the codebase (CSS variables, components)
+
+**Permanent Design Changes:**
+- To change the design language completely, **update the root `DESIGN.md` first**.
+- `DESIGN.md` is the single source of truth for the current design language.
+- All implementation (CSS, components) must derive from `DESIGN.md`.
+- Never mix tokens/rules from multiple design skills.
+
+**When to Use Design Skills vs `frontend-design`:**
+- Use **design skills** when implementing a specific design system (tokens, components, patterns from a named design language)
+- Use **`frontend-design`** (Cline skill) for general UI/UX guidance, custom designs, or when no specific design system applies
 
 ## Cline-Specific Skills (`.clinerules/skills/`)
 

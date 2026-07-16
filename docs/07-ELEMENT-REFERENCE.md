@@ -17,6 +17,10 @@ Use these friendly names in prompts. The AI resolves them to exact elements.
 |---|---|---|---|
 | brand button | brand | `.brand` | rail |
 | capture button | capture-btn | `.command-button[title="Capture current tab"]` | top-bar |
+| capture button group | capture-button-group | `.capture-button-group` | top-bar |
+| capture mode badge | capture-mode-badge | `.capture-mode-badge` | top-bar > capture-button-group |
+| capture dropdown toggle | capture-dropdown-toggle | `.dropdown-toggle` | top-bar > capture-button-group |
+| capture dropdown | capture-dropdown | `.capture-dropdown` | top-bar > capture-button-group |
 | more actions button | more-btn | `.command-button[title="More actions"]` | top-bar |
 | more menu | more-menu | `.slash-suggestions.top-more-menu` | top-bar |
 | full window button | full-window-btn | `.icon-button[title="Full Window"]` | top-bar |

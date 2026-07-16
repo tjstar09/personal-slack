@@ -70,16 +70,16 @@ personal-slack/
 
 | File | Responsibility |
 |---|---|
-| `App.tsx` | Main UI: rail, sidebar, chat, gallery, bookmarks, settings. State management, capture, slash command wiring, composer, collapsible preview, auto-growing textarea. |
-| `captureTab.ts` | `captureTab()` — injects script into active tab, extracts meta/OG/selection, formats as markdown. Falls back to title+URL on CSP failure. |
+| `App.tsx` | Main UI: rail, sidebar, chat, gallery, bookmarks, settings. State management, capture (with modes, preview, history, toast), slash command wiring, composer, collapsible preview, auto-growing textarea. |
+| `captureTab.ts` | `captureTab()` — injects script into active tab, extracts meta/OG/selection, formats as markdown (respecting capture mode). Falls back to title+URL on CSP failure. |
 | `commands.ts` | Slash command definitions (`/melt-tabs`, `/summarize`, `/todo`, `/todos`, `/ask`). Parsing and execution. |
 | `chromeIntegrations.ts` | Chrome bookmark creation, Google Drive auth + upload/upsert, folder management. |
 | `data.ts` | `createDefaultWorkspace()`, `addDraftToWorkspace()`, URL parsing, bookmark kind detection, YouTube thumbnails, `inferAutoTags()`. |
 | `exports.ts` | Pure export functions: Gemini prompt, conversation/page/workspace markdown, clipboard copy. |
 | `githubLinks.ts` | GitHub URL detection (HTTPS/SSH/SSH-URL), action link grouping. |
 | `storage.ts` | `loadWorkspace()` / `saveWorkspace()` abstraction over `chrome.storage.local` with `localStorage` fallback. |
-| `styles.css` | All CSS. Dark theme, grid layout, responsive breakpoint at 560px. |
-| `types.ts` | All TypeScript interfaces: `Page`, `Conversation`, `Message`, `Bookmark`, `BookmarkKind`, `PageKind`, `DraftPayload`, `DriveSyncConfig`, `DriveSyncFileStrategy`, `WorkspaceData`, `ViewMode`. |
+| `styles.css` | All CSS. Dark theme, grid layout, responsive breakpoint at 560px. Capture button group, dropdown, mode badge, history dropdown, toast styles. |
+| `types.ts` | All TypeScript interfaces: `Page`, `Conversation`, `Message`, `Bookmark`, `BookmarkKind`, `PageKind`, `DraftPayload`, `DriveSyncConfig`, `DriveSyncFileStrategy`, `WorkspaceData`, `ViewMode`, `CaptureMode`, `CaptureHistoryEntry`, `TabCaptureData`. |
 
 ---
 

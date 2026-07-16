@@ -19,11 +19,16 @@ User clicks Capture (or right-click / keyboard shortcut)
   → captureTab() queries active tab
   → chrome.scripting.executeScript injects extractPageData()
   → Gets: title, URL, meta description, OG tags, selected text
-  → Formats as structured markdown
-  → Sets draft in composer for review
+  → Formats as structured markdown (respecting capture mode: Full/Standard/Minimal)
+  → Sets draft in composer for review (or posts directly via "Capture & Send")
 ```
 - No separate content script file needed — function is serialized and injected
 - CSP fallback: if `executeScript` fails, produces markdown from basic title + URL
+- **Capture Modes** (Full/Standard/Minimal): Determine how much metadata is extracted and included in the markdown output
+  - **Full** (default): OG tags, meta description, selected text, OG image, enhanced formatting with timestamp
+  - **Standard**: Title, URL, meta description, selected text
+  - **Minimal**: Title + URL only
+- **Toast Notifications**: Top-right feedback for capture success/error/sent status
 
 ### 4. Context Menu Relay
 ```
