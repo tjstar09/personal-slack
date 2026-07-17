@@ -1779,7 +1779,7 @@ function MessageBubble({
                       }));
                       showStatus('Todo toggled.');
                     }}
-                    style={{ cursor: 'pointer', accentColor: 'var(--accent)' }}
+                    style={{ cursor: 'pointer', accentColor: 'var(--color-primary)' }}
                   />
                 );
               }
