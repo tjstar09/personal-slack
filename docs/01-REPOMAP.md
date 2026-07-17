@@ -8,8 +8,7 @@ Current active version: **v1.0** (`v1.0/`). Older v0.1 and v0.2 are retired in `
 
 ```
 personal-slack/
-├── docs/                               # Progressive documentation (read this directory)
-│   ├── 00-START.md                     # Routing entry point — read first
+├── docs/                               # Reference documentation (read on demand)
 │   ├── 01-REPOMAP.md                   # THIS FILE — directory tree + file responsibilities
 │   ├── 02-FEATURES.md                  # Feature checklists by phase
 │   ├── 03-BUGS.md                      # Bug history, fixes, and pitfalls
@@ -60,7 +59,7 @@ personal-slack/
 │       └── transformer.js/skills.md    # Transformers.js, ONNX, local AI
 │
 ├── .gitignore                          # Root git ignore
-├── starter_prompt.md                   # Slim entry point (redirects to docs/)
+├── starter_prompt.md                   # Onboarding prompt (runs once per session)
 ├── AGENTS.md                           # Short redirect to docs/06-AGENTS.md
 └── README.md                           # Project overview + development guide
 

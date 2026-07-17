@@ -1,19 +1,38 @@
-## Brief overview
-These rules govern autonomous agent behavior in this workspace, enforcing a mandatory startup pipeline, strict Plan/Act phase separation, and dynamic skill enforcement to ensure token-efficient, modular execution.
+# Cline Rules: Personal Slack Capture Extension
 
-## Mandatory startup pipeline
-- On Turn 1 of every session/task, silently check and read `starter_prompt.md` from the root directory if present to bootstrap task context.
-- Check and read `agents.md` from the root directory if present to identify active dynamic system skills.
-- For each skill marked active in `agents.md`, read its corresponding `.agents/skills/[skill-name]/skills.md` to load its rules into active context.
-- After loading, output a maximum of one sentence confirming loaded assets (e.g., "Loaded context and active workspace skills. Ready to proceed.") and immediately pivot to executing the task.
-- If none of these files exist, silently default to standard, highly terse, token-conservative execution.
+## Global Constraints
+- Manifest V3, TypeScript (Strict), ES Modules.
+- Chrome APIs: `chrome.tabs`, `chrome.sidePanel`, `chrome.storage`, `chrome.runtime`, `chrome.scripting`, `chrome.contextMenus`, `chrome.windows`, `chrome.identity`, `chrome.bookmarks`, `chrome.commands`.
+- State: React useState + useEffect autosave (No Redux/Zustand).
+- Styling: CSS variables (Theming) + flat CSS (`styles.css`).
 
-## Plan vs. Act phase boundaries
-- **Plan Mode**: Focus on high-reasoning, edge-case analysis, and blueprint creation. Do not edit files or run build tasks.
-- **Act Mode**: Focus on rapid, low-reasoning mechanical execution. Follow the approved plan/blueprint precisely.
-- **Fail-Safe Rule**: If a blocking issue, compile error, or logical gap is encountered during Act Mode, stop immediately. Briefly summarize the error and ask the user to switch back to Plan Mode.
+## Context Protocol (CRITICAL FOR TOKENS)
+- **NEVER** auto-read `docs/`, `agents/`, `starter_prompt.md` on new turns.
+- **TURN 1 ONLY**: User will provide `@REPOMAP @ARCHITECTURE` if needed.
+- **ON-DEMAND ONLY**: Use `read_file` for specific implementation details.
+- **SKILLS**: Do NOT load `agents/skills/*` or `.clinerules/skills/*` unless:
+  1. User explicitly says "Use @skill-<name>".
+  2. Task matches a skill trigger in `docs/06-AGENTS.md` (check index first via `read_file`).
+- **CONTEXT TTL**: Knowledge from skills/docs expires at end of sub-task. Do not carry `frontend-design` context into `background-script` debugging.
 
-## Dynamic skill enforcement
-- Once loaded during the Turn 1 Pipeline, all instructions, formatting rules, and constraints in active skills are strictly binding.
-- **Conflict Resolution**: If a workspace skill conflicts with default behavior, the loaded skill instructions always take precedence.
-- **Scope Limitation**: Only apply skills explicitly registered in the active `agents.md` file. Do not assume or inject external behavioral rules not defined in loaded workspace files.
+## Workflow
+1. **Plan** (Turn 1): Analyze task. Read `@REPOMAP` if provided. Propose plan. **No Code.**
+2. **Implement** (Turn 2+): Write code. Read specific files via tools.
+3. **Verify**: Run `cd v1.0 && npx tsc --noEmit && npm run build`.
+4. **Compact**: Summarize changes for user/git commit.
+
+## Git Workflow Enforcement (CRITICAL — Prevents Direct-to-Main Mistakes)
+- **Always branch first**: Create `feature/<name>` from `main`. Never commit directly to `main`.
+- **Verify before commit**: Run `cd v1.0 && npx tsc --noEmit && npm run build` and ensure it passes.
+- **Push before review**: Push the feature branch to GitHub before asking for approval.
+- **Present exactly 3 options** after pushing:
+  1. ✅ Changes approved. Merge to main.
+  2. 🔧 Changes working but need more modifications.
+  3. ❌ Changes not working. Investigate and fix.
+- **Merge only on approval**: Only merge to `main` after the user selects option 1.
+- **Clean up**: After merge, ask whether to delete or keep the feature branch.
+
+## Startup Pipeline
+- On Turn 1: Read `starter_prompt.md` if present (once per session). Do NOT re-read on subsequent turns.
+- Do NOT auto-load any skill files. Skills are on-demand only.
+- Output max 1 sentence confirming loaded context, then proceed.

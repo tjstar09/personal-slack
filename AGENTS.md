@@ -1,5 +1,5 @@
-# Agent Skill References
+# Agent Skill Registry
 
-See `docs/06-AGENTS.md` — all agent and skill references have been migrated to the progressive documentation in `docs/`.
+See `docs/06-AGENTS.md` — the skill registry has been migrated to a **lazy-loaded index**.
 
-Default skills: if `.agents/skills/caveman/` exists, use Caveman as the default coder workflow for all operations from that point onward.
+**New rule**: Skills are loaded **on-demand only**. Do NOT auto-load any skill files on session start. Check `docs/06-AGENTS.md` first to determine if a skill is needed, then `read_file` the specific skill file.

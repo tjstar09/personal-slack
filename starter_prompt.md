@@ -1,41 +1,37 @@
-# Starter Prompt — Personal Slack
+# Personal Slack — Project Identity (Onboarding Prompt)
 
-This is the entry point for AI agents. Read this first, then follow the routing below.
-
----
-
-## 1. Mandatory Context Loading
-
-Before writing any code, read the following **in this order**:
-
-1. **`docs/00-START.md`** — Routing decision tree. Tells you which docs to read for your task.
-2. **`docs/01-REPOMAP.md`** — Directory tree and file responsibilities.
-3. **`docs/02-FEATURES.md`** (if adding a feature) or **`docs/03-BUGS.md`** (if fixing a bug)
-4. **`docs/04-ARCHITECTURE.md`** (if understanding data flow or design)
-5. **`docs/05-BUILD.md`** (if building or verifying)
-6. **`docs/06-AGENTS.md`** (if invoking an agent or working in a skill-covered domain)
-7. **`docs/07-ELEMENT-REFERENCE.md`** (if addressing or modifying UI elements — provides friendly names, hierarchy, position, neighbors, and CSS selectors)
-8. **`docs/08-DOCUMENTATION.md`** (if contributing changes — read to understand which docs to update and when)
-9. **`docs/09-GIT-WORKFLOW.md`** (mandatory — read BEFORE altering any code)
-10. **`docs/10-CAPTURE-FEATURE-PLAN.md`** (only if working on the capture button overhaul)
-11. **Relevant skill files** from `.agents/skills/` and `.clinerules/skills/` (see `docs/06-AGENTS.md`)
-
-Do not read all docs — read only what your task needs. See `docs/00-START.md` for the routing table.
+**Runs ONCE per task/session.** Do not re-read this file or the docs it references on subsequent turns.
 
 ---
 
-## 2. Default Skill Enforcement
+## Project Identity
 
-If `.agents/skills/caveman/` exists, treat **Caveman** as the default coder workflow for all operations from this point onward. Use the relevant Caveman skill for routine coding operations unless the task explicitly requires a different workflow.
+This is a **Chrome Extension (Manifest V3)** for personal knowledge capture — a "Slack for one." Built with **WXT**, **TypeScript (Strict)**, **React**, and **Tailwind CSS / CSS Variables**.
 
-## 3. Your Mission
+Key capabilities: tab capture, slash commands (/melt-tabs, /todos, /summarize), bookmarks, Google Drive sync, side panel + popup UI.
 
-1. Read the files listed in your routing above (mandatory)
-2. Read the minimum source files needed
-3. Make changes using `replace_in_file` (preferred) or `write_to_file`
-4. Verify: `cd v1.0 && npx tsc --noEmit && npm run build`
-5. Update `docs/` files and `v1.0/README.md` if your change affects features, bugs, or architecture. Use `docs/08-DOCUMENTATION.md` as the source of truth for which docs to update.
-6. Report results concisely
-7. Follow the review/merge workflow in `docs/09-GIT-WORKFLOW.md` — present exactly 3 approval options to the user after pushing a feature branch
+---
 
-**Do not skip context loading. Do not reinvent patterns. Do not panic on npm warnings. Build first, optimize later.**
+## Core Constraints
+
+- **Manifest V3**, TypeScript Strict, ES Modules.
+- **Chrome APIs**: `chrome.tabs`, `chrome.sidePanel`, `chrome.storage`, `chrome.runtime`, `chrome.scripting`, `chrome.contextMenus`, `chrome.windows`, `chrome.identity`, `chrome.bookmarks`, `chrome.commands`.
+- **State**: React useState + useEffect autosave to `chrome.storage.local`. No Redux/Zustand.
+- **Styling**: CSS variables (theming) + flat CSS (`styles.css`).
+- **No `any` types** allowed. Use proper interfaces (defined in `types.ts`).
+
+---
+
+## Workflow Protocol
+
+You are a **Senior Engineer**. Work efficiently:
+
+1. **Do not read docs unless I `@` them or you choose to `read_file` them.** Ask clarifying questions before coding.
+2. **TURN 1**: Analyze the task. You may read `@REPOMAP` if needed. Propose a plan. **No code yet.**
+3. **IMPLEMENT (Turn 2+)**: Write code. Read specific source files via `read_file` for implementation details.
+4. **VERIFY**: Run `cd v1.0 && npx tsc --noEmit && npm run build`.
+5. **COMPACT**: Summarize changes for git commit.
+
+Reference docs are at `docs/`. Skills at `agents/skills/`. Skill index: `docs/06-AGENTS.md`.
+
+**Do not skip context loading.** But also **do not auto-load docs** — load on demand.
