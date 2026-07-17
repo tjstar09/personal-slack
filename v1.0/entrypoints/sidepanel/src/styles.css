@@ -26,25 +26,6 @@
   --color-border-subtle: #E5E7EB; /* Subtle borders for nested elements */
   --color-muted: #6B7280;         /* Muted text, placeholders */
   
-  /* Legacy aliases for gradual migration */
-  --bg: var(--color-surface);
-  --bg-deep: var(--color-surface);
-  --panel: var(--color-surface-elevated);
-  --panel-2: var(--color-surface-elevated);
-  --panel-3: var(--color-surface-elevated);
-  --panel-rise: var(--color-surface-elevated);
-  --text: var(--color-text);
-  --text-primary: var(--color-text);
-  --text-secondary: var(--color-text-muted);
-  --muted: var(--color-muted);
-  --subtle: var(--color-muted);
-  --line: var(--color-border);
-  --line-subtle: var(--color-border-subtle);
-  --accent: var(--color-primary);
-  --accent-glow: var(--color-primary);
-  --accent-2: var(--color-secondary);
-  --danger: var(--color-danger);
-  
   /* Shadows - minimal, borders preferred for elevation */
   --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
   --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
@@ -109,25 +90,6 @@
     --color-border-subtle: #374151; /* Subtle borders for nested elements */
     --color-muted: #D1D5DB;         /* Muted text, placeholders (lighter for visibility) */
     
-    /* Legacy aliases for gradual migration */
-    --bg: var(--color-surface);
-    --bg-deep: var(--color-surface);
-    --panel: var(--color-surface-elevated);
-    --panel-2: var(--color-surface-elevated);
-    --panel-3: var(--color-surface-elevated);
-    --panel-rise: var(--color-surface-elevated);
-    --text: var(--color-text);
-    --text-primary: var(--color-text);
-    --text-secondary: var(--color-text-muted);
-    --muted: var(--color-muted);
-    --subtle: var(--color-muted);
-    --line: var(--color-border);
-    --line-subtle: var(--color-border-subtle);
-    --accent: var(--color-primary);
-    --accent-glow: var(--color-primary);
-    --accent-2: var(--color-secondary);
-    --danger: var(--color-danger);
-    
     /* Shadows - minimal, borders preferred for elevation */
     /* Dark mode shadows use rgba(0,0,0, higher alpha) for depth */
     --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
@@ -137,50 +99,6 @@
     --shadow: var(--shadow-md);
     --shadow-elevated: var(--shadow-lg);
   }
-}
-
-/* Optional: Manual dark mode class override for future theme toggle support */
-.dark {
-  --color-primary: #A78BFA;
-  --color-primary-hover: #8B5CF6;
-  --color-secondary: #FDC800;
-  --color-secondary-hover: #F5C000;
-  --color-success: #4ADE80;
-  --color-warning: #FBBF24;
-  --color-danger: #F87171;
-  --color-surface: #0F1419;
-  --color-surface-elevated: #1C293C;
-  --color-text: #FBFBF9;
-  --color-text-muted: #D1D5DB;
-  --color-neutral: #0F1419;
-  --color-border: #FBFBF9;
-  --color-border-subtle: #374151;
-  --color-muted: #D1D5DB;
-  
-  --bg: var(--color-surface);
-  --bg-deep: var(--color-surface);
-  --panel: var(--color-surface-elevated);
-  --panel-2: var(--color-surface-elevated);
-  --panel-3: var(--color-surface-elevated);
-  --panel-rise: var(--color-surface-elevated);
-  --text: var(--color-text);
-  --text-primary: var(--color-text);
-  --text-secondary: var(--color-text-muted);
-  --muted: var(--color-muted);
-  --subtle: var(--color-muted);
-  --line: var(--color-border);
-  --line-subtle: var(--color-border-subtle);
-  --accent: var(--color-primary);
-  --accent-glow: var(--color-primary);
-  --accent-2: var(--color-secondary);
-  --danger: var(--color-danger);
-  
-  --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
-  --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
-  --shadow-lg: 0 8px 24px rgba(0,0,0,0.5);
-  --shadow-xl: 0 16px 48px rgba(0,0,0,0.6);
-  --shadow: var(--shadow-md);
-  --shadow-elevated: var(--shadow-lg);
 }
 
 /* ==========================================================================
