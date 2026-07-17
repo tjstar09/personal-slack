@@ -69,36 +69,34 @@
 }
 
 /* ==========================================================================
-   DARK MODE TOKENS — Neobrutalism (prefers-color-scheme: dark)
+   DARK MODE TOKENS — Neobrutalism (.dark class on <html>)
    ========================================================================== */
-@media (prefers-color-scheme: dark) {
-  :root {
-    /* Neobrutalism Dark Mode Color Palette */
-    --color-primary: #A78BFA;       /* Purple - primary accent (lightened for dark mode) */
-    --color-primary-hover: #8B5CF6; /* Purple hover */
-    --color-secondary: #FDC800;     /* Yellow - secondary accent */
-    --color-secondary-hover: #F5C000; /* Yellow hover */
-    --color-success: #4ADE80;       /* Green - success states (lightened) */
-    --color-warning: #FBBF24;       /* Amber - warning states (lightened) */
-    --color-danger: #F87171;        /* Red - danger/destructive (lightened) */
-    --color-surface: #0F1419;       /* Near-black warm - primary background */
-    --color-surface-elevated: #1C293C; /* Elevated surfaces (cards, panels, modals) */
-    --color-text: #FBFBF9;          /* Warm white - primary text */
-    --color-text-muted: #D1D5DB;    /* Muted text for dark backgrounds (lighter for visibility) */
-    --color-neutral: #0F1419;       /* Neutral background (same as surface) */
-    --color-border: #FBFBF9;        /* ALL borders - warm white (key neobrutalism trait) */
-    --color-border-subtle: #374151; /* Subtle borders for nested elements */
-    --color-muted: #D1D5DB;         /* Muted text, placeholders (lighter for visibility) */
-    
-    /* Shadows - minimal, borders preferred for elevation */
-    /* Dark mode shadows use rgba(0,0,0, higher alpha) for depth */
-    --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
-    --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
-    --shadow-lg: 0 8px 24px rgba(0,0,0,0.5);
-    --shadow-xl: 0 16px 48px rgba(0,0,0,0.6);
-    --shadow: var(--shadow-md);
-    --shadow-elevated: var(--shadow-lg);
-  }
+.dark {
+  /* Neobrutalism Dark Mode Color Palette */
+  --color-primary: #A78BFA;       /* Purple - primary accent (lightened for dark mode) */
+  --color-primary-hover: #8B5CF6; /* Purple hover */
+  --color-secondary: #FDC800;     /* Yellow - secondary accent */
+  --color-secondary-hover: #F5C000; /* Yellow hover */
+  --color-success: #4ADE80;       /* Green - success states (lightened) */
+  --color-warning: #FBBF24;       /* Amber - warning states (lightened) */
+  --color-danger: #F87171;        /* Red - danger/destructive (lightened) */
+  --color-surface: #0F1419;       /* Near-black warm - primary background */
+  --color-surface-elevated: #1C293C; /* Elevated surfaces (cards, panels, modals) */
+  --color-text: #FBFBF9;          /* Warm white - primary text */
+  --color-text-muted: #D1D5DB;    /* Muted text for dark backgrounds (lighter for visibility) */
+  --color-neutral: #0F1419;       /* Neutral background (same as surface) */
+  --color-border: #FBFBF9;        /* ALL borders - warm white (key neobrutalism trait) */
+  --color-border-subtle: #374151; /* Subtle borders for nested elements */
+  --color-muted: #D1D5DB;         /* Muted text, placeholders (lighter for visibility) */
+  
+  /* Shadows - minimal, borders preferred for elevation */
+  /* Dark mode shadows use rgba(0,0,0, higher alpha) for depth */
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.5);
+  --shadow-xl: 0 16px 48px rgba(0,0,0,0.6);
+  --shadow: var(--shadow-md);
+  --shadow-elevated: var(--shadow-lg);
 }
 
 /* ==========================================================================
@@ -351,6 +349,36 @@ h2 {
 .mini-button:active,
 .mode-button:active {
   transform: translate(1px, 1px);
+}
+
+/* Theme toggle button */
+.theme-toggle {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-muted);
+  border: 2px solid var(--color-border);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform var(--transition-fast), border-color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.theme-toggle:hover {
+  color: var(--color-text);
+  transform: translate(-2px, -2px);
+  border-color: var(--color-border);
+}
+
+.theme-toggle:active {
+  transform: translate(1px, 1px);
+}
+
+.theme-toggle:focus-visible {
+  outline: 3px solid var(--color-border);
+  outline-offset: 2px;
 }
 
 .command-button:hover {

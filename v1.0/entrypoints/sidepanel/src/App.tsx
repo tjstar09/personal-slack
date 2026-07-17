@@ -21,6 +21,7 @@ import {
   Maximize2,
   MessageSquarePlus,
   Minimize2,
+  Moon,
   PanelRightClose,
   PanelRightOpen,
   Pin,
@@ -29,6 +30,7 @@ import {
   Send,
   Settings,
   Sparkles,
+  Sun,
   Tags,
   Trash2,
   UploadCloud,
@@ -66,7 +68,7 @@ import {
   makeMarkdownFilename,
 } from './exports';
 import { findGitHubRepos, getGitHubActionLinks, type GitHubRepoInfo } from './githubLinks';
-import { loadWorkspace, saveWorkspace } from './storage';
+import { loadWorkspace, saveWorkspace, loadThemePreference, saveThemePreference } from './storage';
 import { captureTab } from './captureTab';
 import { isSlashCommand, parseSlashCommand, executeMeltTabs, SLASH_COMMANDS, type SlashCommand } from './commands';
 import { MELTED_TABS_PAGE_ID } from './data';
@@ -189,6 +191,10 @@ export function App({ fullWindow = false }: { fullWindow?: boolean }) {
   const [moreMenuStyle, setMoreMenuStyle] = useState<React.CSSProperties>({});
   const moreMenuRef = useRef<HTMLDivElement | null>(null);
   const captureButtonGroupRef = useRef<HTMLDivElement | null>(null);
+  
+  // Theme state
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const [themeLoaded, setThemeLoaded] = useState(false);
 
   // Position the More menu relative to the button on open/reopen
   const positionMoreMenu = useCallback(() => {
@@ -231,6 +237,23 @@ export function App({ fullWindow = false }: { fullWindow?: boolean }) {
     if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
     toastTimerRef.current = setTimeout(() => setToast(null), 3000);
   }, []);
+
+  // Load theme preference
+  useEffect(() => {
+    loadThemePreference().then((saved) => {
+      const initialTheme = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      setTheme(initialTheme);
+      document.documentElement.classList.toggle('dark', initialTheme === 'dark');
+      setThemeLoaded(true);
+    });
+  }, []);
+
+  // Apply theme class to document
+  useEffect(() => {
+    if (!themeLoaded) return;
+    document.documentElement.classList.toggle('dark', theme === 'dark');
+    saveThemePreference(theme);
+  }, [theme, themeLoaded]);
 
   // Load workspace and check first-run
   useEffect(() => {
@@ -1194,6 +1217,14 @@ export function App({ fullWindow = false }: { fullWindow?: boolean }) {
                 <Maximize2 size={16} />
               </button>
             )}
+            <button
+              className="icon-button theme-toggle"
+              onClick={() => setTheme((prev) => (prev === 'light' ? 'dark' : 'light'))}
+              title={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
+              aria-label={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
+            >
+              {theme === 'light' ? <Moon size={16} /> : <Sun size={16} />}
+            </button>
           </div>
         </div>
 
