@@ -76,6 +76,8 @@ When adding or updating any skill, follow these rules:
    - Follow the patterns, APIs, and conventions documented there
    - Do not reinvent what the skill already documents
 
-## Starter Prompt Requirement
+## Git Workflow Enforcement
 
-The `starter_prompt.md` already requires doc updates for feature, bug, and architecture changes. This file exists so the rule is explicit in the docs folder, not only in the bootstrap prompt.
+The branching strategy (feature branch, build verify, push, 3 approval options, merge on approval) is enforced in two places:
+- **`.clinerules/autonomous-workspace.md`** — injected by Cline on every task (authoritative, always active)
+- **`docs/09-GIT-WORKFLOW.md`** — full reference with commands and detailed procedure (read on demand)
