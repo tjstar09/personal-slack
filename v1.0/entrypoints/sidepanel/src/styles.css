@@ -1,38 +1,45 @@
 /* ==========================================================================
-   ROOT THEME & VARIABLES — Personal Slack v1.0 (Neobrutalism)
+   ROOT THEME & VARIABLES — Personal Slack v1.0 (Neobrutalism Dark Mode)
    ========================================================================== */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
 :root {
-  color-scheme: light;
+  color-scheme: light dark;
   
-  /* Neobrutalism Color Palette */
-  --color-primary: #FDC800;       /* Yellow - primary accent */
-  --color-secondary: #432DD7;     /* Purple - secondary accent */
+  /* ==========================================================================
+     LIGHT MODE TOKENS (default)
+     ========================================================================== */
+  --color-primary: #432DD7;       /* Purple - primary accent */
+  --color-primary-hover: #5B3CE6; /* Purple hover */
+  --color-secondary: #FDC800;     /* Yellow - secondary accent */
+  --color-secondary-hover: #F5C000; /* Yellow hover */
   --color-success: #16A34A;       /* Green - success states */
   --color-warning: #D97706;       /* Amber - warning states */
   --color-danger: #DC2626;        /* Red - danger/destructive */
   --color-surface: #FBFBF9;       /* Warm off-white - primary background */
-  --color-text: #1C293C;          /* Dark navy - primary text & borders */
-  --color-neutral: #FBFBF9;       /* Neutral background (same as surface) */
+  --color-surface-elevated: #FBFBF9; /* Elevated surfaces (cards, panels) */
+  --color-text: #1C293C;          /* Dark navy - primary text */
+  --color-text-muted: #6B7280;    /* Muted text */
+  --color-neutral: #FBFBF9;       /* Neutral background */
   --color-border: #1C293C;        /* All borders - high contrast */
+  --color-border-subtle: #E5E7EB; /* Subtle borders for nested elements */
   --color-muted: #6B7280;         /* Muted text, placeholders */
   
   /* Legacy aliases for gradual migration */
   --bg: var(--color-surface);
   --bg-deep: var(--color-surface);
-  --panel: var(--color-surface);
-  --panel-2: var(--color-surface);
-  --panel-3: var(--color-surface);
-  --panel-rise: var(--color-surface);
+  --panel: var(--color-surface-elevated);
+  --panel-2: var(--color-surface-elevated);
+  --panel-3: var(--color-surface-elevated);
+  --panel-rise: var(--color-surface-elevated);
   --text: var(--color-text);
   --text-primary: var(--color-text);
-  --text-secondary: var(--color-muted);
+  --text-secondary: var(--color-text-muted);
   --muted: var(--color-muted);
   --subtle: var(--color-muted);
   --line: var(--color-border);
-  --line-subtle: var(--color-border);
+  --line-subtle: var(--color-border-subtle);
   --accent: var(--color-primary);
   --accent-glow: var(--color-primary);
   --accent-2: var(--color-secondary);
@@ -78,6 +85,102 @@
   --z-modal: 1000;
   --z-toast: 2000;
   --z-onboarding: 3000;
+}
+
+/* ==========================================================================
+   DARK MODE TOKENS — Neobrutalism (prefers-color-scheme: dark)
+   ========================================================================== */
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Neobrutalism Dark Mode Color Palette */
+    --color-primary: #A78BFA;       /* Purple - primary accent (lightened for dark mode) */
+    --color-primary-hover: #8B5CF6; /* Purple hover */
+    --color-secondary: #FDC800;     /* Yellow - secondary accent */
+    --color-secondary-hover: #F5C000; /* Yellow hover */
+    --color-success: #4ADE80;       /* Green - success states (lightened) */
+    --color-warning: #FBBF24;       /* Amber - warning states (lightened) */
+    --color-danger: #F87171;        /* Red - danger/destructive (lightened) */
+    --color-surface: #0F1419;       /* Near-black warm - primary background */
+    --color-surface-elevated: #1C293C; /* Elevated surfaces (cards, panels, modals) */
+    --color-text: #FBFBF9;          /* Warm white - primary text */
+    --color-text-muted: #9CA3AF;    /* Muted text for dark backgrounds */
+    --color-neutral: #0F1419;       /* Neutral background (same as surface) */
+    --color-border: #FBFBF9;        /* ALL borders - warm white (key neobrutalism trait) */
+    --color-border-subtle: #374151; /* Subtle borders for nested elements */
+    --color-muted: #9CA3AF;         /* Muted text, placeholders */
+    
+    /* Legacy aliases for gradual migration */
+    --bg: var(--color-surface);
+    --bg-deep: var(--color-surface);
+    --panel: var(--color-surface-elevated);
+    --panel-2: var(--color-surface-elevated);
+    --panel-3: var(--color-surface-elevated);
+    --panel-rise: var(--color-surface-elevated);
+    --text: var(--color-text);
+    --text-primary: var(--color-text);
+    --text-secondary: var(--color-text-muted);
+    --muted: var(--color-muted);
+    --subtle: var(--color-muted);
+    --line: var(--color-border);
+    --line-subtle: var(--color-border-subtle);
+    --accent: var(--color-primary);
+    --accent-glow: var(--color-primary);
+    --accent-2: var(--color-secondary);
+    --danger: var(--color-danger);
+    
+    /* Shadows - minimal, borders preferred for elevation */
+    /* Dark mode shadows use rgba(0,0,0, higher alpha) for depth */
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+    --shadow-lg: 0 8px 24px rgba(0,0,0,0.5);
+    --shadow-xl: 0 16px 48px rgba(0,0,0,0.6);
+    --shadow: var(--shadow-md);
+    --shadow-elevated: var(--shadow-lg);
+  }
+}
+
+/* Optional: Manual dark mode class override for future theme toggle support */
+.dark {
+  --color-primary: #A78BFA;
+  --color-primary-hover: #8B5CF6;
+  --color-secondary: #FDC800;
+  --color-secondary-hover: #F5C000;
+  --color-success: #4ADE80;
+  --color-warning: #FBBF24;
+  --color-danger: #F87171;
+  --color-surface: #0F1419;
+  --color-surface-elevated: #1C293C;
+  --color-text: #FBFBF9;
+  --color-text-muted: #9CA3AF;
+  --color-neutral: #0F1419;
+  --color-border: #FBFBF9;
+  --color-border-subtle: #374151;
+  --color-muted: #9CA3AF;
+  
+  --bg: var(--color-surface);
+  --bg-deep: var(--color-surface);
+  --panel: var(--color-surface-elevated);
+  --panel-2: var(--color-surface-elevated);
+  --panel-3: var(--color-surface-elevated);
+  --panel-rise: var(--color-surface-elevated);
+  --text: var(--color-text);
+  --text-primary: var(--color-text);
+  --text-secondary: var(--color-text-muted);
+  --muted: var(--color-muted);
+  --subtle: var(--color-muted);
+  --line: var(--color-border);
+  --line-subtle: var(--color-border-subtle);
+  --accent: var(--color-primary);
+  --accent-glow: var(--color-primary);
+  --accent-2: var(--color-secondary);
+  --danger: var(--color-danger);
+  
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.5);
+  --shadow-xl: 0 16px 48px rgba(0,0,0,0.6);
+  --shadow: var(--shadow-md);
+  --shadow-elevated: var(--shadow-lg);
 }
 
 /* ==========================================================================
