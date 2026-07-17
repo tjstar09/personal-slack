@@ -2,27 +2,52 @@
 
 This document defines the active design system for the Personal Slack extension. It serves as the single source of truth for design tokens, component patterns, and visual identity.
 
-**Active Design**: Neobrutalism (from `.agents/skills/awesome-design-skills-main/skills/neobrutalism/`)
-**Last Updated**: 2025-07-16
+**Active Design**: Neobrutalism (from `.agents/skills/awesome-design-skills-main/skills/neobrutalism/`) — **Dark Mode Enabled**
+**Last Updated**: 2025-07-17
 
 ---
 
 ## Design Tokens
 
-### Color Palette
+### Color Palette — Light Mode (Default)
 
 | Token | Value | Usage |
 |-------|-------|-------|
-| `--color-primary` | `#FDC800` | Primary accent (yellow) — main actions, highlights |
-| `--color-secondary` | `#432DD7` | Secondary accent (purple) — secondary actions |
+| `--color-primary` | `#432DD7` | Primary accent (purple) — main actions, highlights |
+| `--color-primary-hover` | `#5B3CE6` | Primary hover state |
+| `--color-secondary` | `#FDC800` | Secondary accent (yellow) — secondary actions |
+| `--color-secondary-hover` | `#F5C000` | Secondary hover state |
 | `--color-success` | `#16A34A` | Success states, confirmations |
 | `--color-warning` | `#D97706` | Warning states |
 | `--color-danger` | `#DC2626` | Error, destructive actions |
 | `--color-surface` | `#FBFBF9` | Primary background, cards, panels |
-| `--color-text` | `#1C293C` | Primary text, borders |
-| `--color-neutral` | `#FBFBF9` | Neutral backgrounds (same as surface) |
+| `--color-surface-elevated` | `#FBFBF9` | Elevated surfaces (modals, dropdowns) |
+| `--color-text` | `#1C293C` | Primary text |
+| `--color-text-muted` | `#6B7280` | Muted text, placeholders, secondary info |
 | `--color-border` | `#1C293C` | All borders (bold, high contrast) |
+| `--color-border-subtle` | `#E5E7EB` | Subtle borders for nested elements |
+| `--color-neutral` | `#FBFBF9` | Neutral backgrounds (same as surface) |
 | `--color-muted` | `#6B7280` | Muted text, placeholders, secondary info |
+
+### Color Palette — Dark Mode (`@media (prefers-color-scheme: dark)`)
+
+| Token | Value | Usage |
+|-------|-------|-------|
+| `--color-primary` | `#FDC800` | Primary accent (yellow) — **unchanged, pops on dark** |
+| `--color-primary-hover` | `#F5C000` | Slightly darker yellow for hover |
+| `--color-secondary` | `#A78BFA` | Secondary accent (light purple) — lightened for dark mode |
+| `--color-secondary-hover` | `#8B5CF6` | Brighter purple hover |
+| `--color-success` | `#4ADE80` | Success states — lightened for dark mode |
+| `--color-warning` | `#FBBF24` | Warning states — lightened for dark mode |
+| `--color-danger` | `#F87171` | Error, destructive — lightened for dark mode |
+| `--color-surface` | `#0F1419` | Primary background — near-black warm dark |
+| `--color-surface-elevated` | `#1C293C` | Elevated surfaces (cards, panels, modals) |
+| `--color-text` | `#FBFBF9` | Primary text — warm white |
+| `--color-text-muted` | `#D1D5DB` | Muted text, placeholders (lighter for visibility) |
+| `--color-border` | `#FBFBF9` | **All borders — warm white (key neobrutalism trait)** |
+| `--color-border-subtle` | `#374151` | Subtle borders for nested elements |
+| `--color-neutral` | `#0F1419` | Neutral backgrounds (same as surface) |
+| `--color-muted` | `#D1D5DB` | Muted text, placeholders, secondary info (lighter for visibility) |
 
 ### Typography
 
@@ -101,15 +126,15 @@ Neobrutalism uses **bold borders instead of shadows** for elevation. Minimal sha
 
 ### Brand Personality
 - **Bold, raw, high-contrast, developer-focused**
-- Light-first interface optimized for side-panel usage
+- Dark-first interface optimized for side-panel usage
 - Sharp edges, thick borders, vivid accent colors
 - No gradients, no glows, no subtle shadows — honest, unapologetic UI
 
 ### Key Visual Characteristics
-1. **Light theme only** — warm off-white surface (`#FBFBF9`)
-2. **Thick borders everywhere** — 2-4px solid `#1C293C` on all interactive elements
-3. **High contrast** — navy text (`#1C293C`) on warm white
-4. **Yellow primary** (`#FDC800`) for CTAs, purple secondary (`#432DD7`) for alternatives
+1. **Dark theme default** — near-black warm surface (`#0F1419`)
+2. **Thick white/light borders everywhere** — 2-4px solid `#FBFBF9` on all interactive elements
+3. **High contrast** — warm white text (`#FBFBF9`) on near-black
+4. **Yellow primary** (`#FDC800`) for CTAs, purple secondary (`#A78BFA`) for alternatives
 5. **Offset hover states** — elements shift `translate(-2px, -2px)` with border emphasis
 6. **No border-radius on primary buttons** — sharp corners (4px max for inputs)
 7. **Monospace for labels/captions** — JetBrains Mono for technical feel
@@ -123,7 +148,7 @@ Neobrutalism uses **bold borders instead of shadows** for elevation. Minimal sha
 | Variant | Background | Border | Text | Usage |
 |---------|------------|--------|------|-------|
 | Primary | `--color-primary` | 3px solid `--color-border` | `--color-text` | Main actions |
-| Secondary | `--color-surface` | 3px solid `--color-border` | `--color-text` | Secondary actions |
+| Secondary | `--color-surface-elevated` | 3px solid `--color-border` | `--color-text` | Secondary actions |
 | Ghost | transparent | 2px solid transparent | `--color-text` | Subtle actions |
 | Danger | `--color-danger` | 3px solid `--color-border` | white | Destructive |
 | Icon | transparent | 2px solid transparent | `--color-muted` | Toolbar actions |
@@ -137,17 +162,17 @@ Neobrutalism uses **bold borders instead of shadows** for elevation. Minimal sha
 
 ### Inputs
 
-- Background: `--color-surface`
+- Background: `--color-surface-elevated`
 - Border: `3px solid var(--color-border)`
 - Text: `--color-text`
-- Placeholder: `--color-muted`
+- Placeholder: `--color-text-muted`
 - Radius: `--radius-sm` (4px)
 - Height: 40px minimum
 - **Focus**: `outline: 3px solid var(--color-border)`, `outline-offset: 2px`
 
 ### Cards / Panels
 
-- Background: `--color-surface`
+- Background: `--color-surface-elevated`
 - Border: `3px solid var(--color-border)`
 - Radius: `--radius-md` (8px)
 - Padding: `--space-4` (16px)
@@ -162,16 +187,37 @@ Neobrutalism uses **bold borders instead of shadows** for elevation. Minimal sha
 ### Typography Hierarchy
 
 - **Page titles**: 20px, weight 700, `--color-text`
-- **Section headers**: 12px, weight 700, uppercase, tracking 0.5px, `--color-muted`, font: `--font-mono`
+- **Section headers**: 12px, weight 700, uppercase, tracking 0.5px, `--color-text-muted`, font: `--font-mono`
 - **Body**: 14px, weight 400, `--color-text`
-- **Meta/small**: 12px, weight 400, `--color-muted`
+- **Meta/small**: 12px, weight 400, `--color-text-muted`
 - **Code**: 13px, `--font-mono`, `--color-secondary`
+
+---
+
+## Dark Mode Specifics
+
+### Border Strategy
+- **All interactive borders**: `3px solid var(--color-border)` → warm white (`#FBFBF9`)
+- **Subtle/nested borders**: `2px solid var(--color-border-subtle)` → `#374151`
+- **Focus outlines**: `3px solid var(--color-border)` → warm white
+
+### Surface Elevation
+- **Base surface** (`--color-surface`): `#0F1419` — main background
+- **Elevated surface** (`--color-surface-elevated`): `#1C293C` — cards, panels, modals, dropdowns
+- **Active/selected states**: `--color-primary` background (`#FDC800`)
+
+### Accent Colors (Adjusted for Dark)
+- **Primary (yellow)**: `#FDC800` — **unchanged**, pops perfectly on dark
+- **Secondary (purple)**: `#A78BFA` (default) → `#8B5CF6` (hover) — lightened from `#432DD7`
+- **Success**: `#4ADE80` — lightened from `#16A34A`
+- **Warning**: `#FBBF24` — lightened from `#D97706`
+- **Danger**: `#F87171` — lightened from `#DC2626`
 
 ---
 
 ## Accessibility Standards
 
-- **Contrast**: All text meets WCAG 2.2 AA (4.5:1 normal, 3:1 large) — navy on warm white = 12.6:1
+- **Contrast**: All text meets WCAG 2.2 AA (4.5:1 normal, 3:1 large) — warm white on near-black = 15.8:1
 - **Focus**: Visible 3px outline using `--color-border` with 2px offset
 - **Motion**: Respects `prefers-reduced-motion` — disable transforms/transitions
 - **Keyboard**: All interactive elements reachable and operable
@@ -189,6 +235,7 @@ Neobrutalism uses **bold borders instead of shadows** for elevation. Minimal sha
 - ❌ Gradients, glows, or blur effects
 - ❌ Breaking the 4px spacing grid
 - ❌ Overriding focus styles for aesthetics
+- ❌ Using light mode tokens in dark mode without adaptation
 
 ---
 
@@ -199,11 +246,12 @@ Before merging UI changes:
 - [ ] All colors reference design tokens (CSS variables)
 - [ ] Spacing uses 4px increments
 - [ ] Focus states visible and accessible (3px outline)
-- [ ] Light theme renders correctly (no hardcoded dark colors)
+- [ ] **Both light and dark themes render correctly**
 - [ ] Components work at 420px min-width (side panel constraint)
 - [ ] No console errors/warnings in devtools
 - [ ] Hover/active/focus states tested on all interactive elements
 - [ ] `prefers-reduced-motion` respected
+- [ ] Dark mode borders are warm white (`--color-border`), not dark
 
 ---
 
