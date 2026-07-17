@@ -103,11 +103,11 @@
     --color-surface: #0F1419;       /* Near-black warm - primary background */
     --color-surface-elevated: #1C293C; /* Elevated surfaces (cards, panels, modals) */
     --color-text: #FBFBF9;          /* Warm white - primary text */
-    --color-text-muted: #9CA3AF;    /* Muted text for dark backgrounds */
+    --color-text-muted: #D1D5DB;    /* Muted text for dark backgrounds (lighter for visibility) */
     --color-neutral: #0F1419;       /* Neutral background (same as surface) */
     --color-border: #FBFBF9;        /* ALL borders - warm white (key neobrutalism trait) */
     --color-border-subtle: #374151; /* Subtle borders for nested elements */
-    --color-muted: #9CA3AF;         /* Muted text, placeholders */
+    --color-muted: #D1D5DB;         /* Muted text, placeholders (lighter for visibility) */
     
     /* Legacy aliases for gradual migration */
     --bg: var(--color-surface);
@@ -151,11 +151,11 @@
   --color-surface: #0F1419;
   --color-surface-elevated: #1C293C;
   --color-text: #FBFBF9;
-  --color-text-muted: #9CA3AF;
+  --color-text-muted: #D1D5DB;
   --color-neutral: #0F1419;
   --color-border: #FBFBF9;
   --color-border-subtle: #374151;
-  --color-muted: #9CA3AF;
+  --color-muted: #D1D5DB;
   
   --bg: var(--color-surface);
   --bg-deep: var(--color-surface);

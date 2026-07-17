@@ -43,11 +43,11 @@ This document defines the active design system for the Personal Slack extension.
 | `--color-surface` | `#0F1419` | Primary background — near-black warm dark |
 | `--color-surface-elevated` | `#1C293C` | Elevated surfaces (cards, panels, modals) |
 | `--color-text` | `#FBFBF9` | Primary text — warm white |
-| `--color-text-muted` | `#9CA3AF` | Muted text, placeholders |
+| `--color-text-muted` | `#D1D5DB` | Muted text, placeholders (lighter for visibility) |
 | `--color-border` | `#FBFBF9` | **All borders — warm white (key neobrutalism trait)** |
 | `--color-border-subtle` | `#374151` | Subtle borders for nested elements |
 | `--color-neutral` | `#0F1419` | Neutral backgrounds (same as surface) |
-| `--color-muted` | `#9CA3AF` | Muted text, placeholders, secondary info |
+| `--color-muted` | `#D1D5DB` | Muted text, placeholders, secondary info (lighter for visibility) |
 
 ### Typography
 
