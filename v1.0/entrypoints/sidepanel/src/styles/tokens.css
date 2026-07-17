@@ -1,0 +1,101 @@
+/* ==========================================================================
+   ROOT THEME & VARIABLES — Personal Slack v1.0 (Neobrutalism)
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+:root {
+  color-scheme: light dark;
+  
+  /* ==========================================================================
+     LIGHT MODE TOKENS (default)
+     ========================================================================== */
+  --color-primary: #432DD7;       /* Purple - primary accent */
+  --color-primary-hover: #5B3CE6; /* Purple hover */
+  --color-secondary: #FDC800;     /* Yellow - secondary accent */
+  --color-secondary-hover: #F5C000; /* Yellow hover */
+  --color-success: #16A34A;       /* Green - success states */
+  --color-warning: #D97706;       /* Amber - warning states */
+  --color-danger: #DC2626;        /* Red - danger/destructive */
+  --color-surface: #FBFBF9;       /* Warm off-white - primary background */
+  --color-surface-elevated: #FBFBF9; /* Elevated surfaces (cards, panels) */
+  --color-text: #1C293C;          /* Dark navy - primary text */
+  --color-text-muted: #6B7280;    /* Muted text */
+  --color-neutral: #FBFBF9;       /* Neutral background */
+  --color-border: #1C293C;        /* All borders - high contrast */
+  --color-border-subtle: #E5E7EB; /* Subtle borders for nested elements */
+  --color-muted: #6B7280;         /* Muted text, placeholders */
+  
+  /* Shadows - minimal, borders preferred for elevation */
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.15);
+  --shadow-xl: 0 16px 48px rgba(0,0,0,0.2);
+  --shadow: var(--shadow-md);
+  --shadow-elevated: var(--shadow-lg);
+  
+  /* Typography */
+  --font-family: 'Inter', 'Geist', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  
+  /* Spacing (4px base) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+  
+  /* Border Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
+  
+  /* Transitions */
+  --transition-fast: 120ms ease;
+  --transition-normal: 200ms ease;
+  --transition-slow: 300ms ease;
+  
+  /* Z-Index */
+  --z-base: 1;
+  --z-dropdown: 100;
+  --z-modal: 1000;
+  --z-toast: 2000;
+  --z-onboarding: 3000;
+}
+
+/* ==========================================================================
+   DARK MODE TOKENS — Neobrutalism (.dark class on <html>)
+   ========================================================================== */
+.dark {
+  /* Neobrutalism Dark Mode Color Palette */
+  --color-primary: #A78BFA;       /* Purple - primary accent (lightened for dark mode) */
+  --color-primary-hover: #8B5CF6; /* Purple hover */
+  --color-secondary: #FDC800;     /* Yellow - secondary accent */
+  --color-secondary-hover: #F5C000; /* Yellow hover */
+  --color-success: #4ADE80;       /* Green - success states (lightened) */
+  --color-warning: #FBBF24;       /* Amber - warning states (lightened) */
+  --color-danger: #F87171;        /* Red - danger/destructive (lightened) */
+  --color-surface: #0F1419;       /* Near-black warm - primary background */
+  --color-surface-elevated: #1C293C; /* Elevated surfaces (cards, panels, modals) */
+  --color-text: #FBFBF9;          /* Warm white - primary text */
+  --color-text-muted: #D1D5DB;    /* Muted text for dark backgrounds (lighter for visibility) */
+  --color-neutral: #0F1419;       /* Neutral background (same as surface) */
+  --color-border: #FBFBF9;        /* ALL borders - warm white (key neobrutalism trait) */
+  --color-border-subtle: #374151; /* Subtle borders for nested elements */
+  --color-muted: #D1D5DB;         /* Muted text, placeholders (lighter for visibility) */
+  
+  /* Shadows - minimal, borders preferred for elevation */
+  /* Dark mode shadows use rgba(0,0,0, higher alpha) for depth */
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.5);
+  --shadow-xl: 0 16px 48px rgba(0,0,0,0.6);
+  --shadow: var(--shadow-md);
+  --shadow-elevated: var(--shadow-lg);
+}
