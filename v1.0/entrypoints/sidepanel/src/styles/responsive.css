@@ -16,13 +16,24 @@
     padding: var(--space-3);
   }
 
-  .top-bar {
-    padding: var(--space-3);
+  .top-bar-actions {
+    padding: var(--space-2) var(--space-3);
+    gap: var(--space-1);
   }
 
-  .command-button span,
-  .send-button span {
+  .top-bar-title {
+    padding: var(--space-1) var(--space-3);
+  }
+
+  /* Hide text labels on command/send buttons but keep icon + mode badge visible */
+  .command-button .cmd-label,
+  .send-button .cmd-label {
     display: none;
+  }
+
+  /* Mode badge text MUST remain visible */
+  .mode-badge-text {
+    display: inline !important;
   }
 
   .composer-tools,
@@ -56,13 +67,24 @@
     padding: var(--space-3);
   }
 
-  .top-bar {
-    padding: var(--space-3);
+  .top-bar-actions {
+    padding: var(--space-2) var(--space-3);
+    gap: var(--space-1);
   }
 
-  .command-button span,
-  .send-button span {
+  .top-bar-title {
+    padding: var(--space-1) var(--space-3);
+  }
+
+  /* Hide text labels on command/send buttons but keep icon + mode badge visible */
+  .command-button .cmd-label,
+  .send-button .cmd-label {
     display: none;
+  }
+
+  /* Mode badge text MUST remain visible */
+  .mode-badge-text {
+    display: inline !important;
   }
 
   .stats-row {

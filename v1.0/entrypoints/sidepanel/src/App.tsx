@@ -1070,162 +1070,168 @@ export function App({ fullWindow = false }: { fullWindow?: boolean }) {
       )}
 
       <main className="main-panel">
-        <div className="top-bar">
-          <div>
-            <p className="eyebrow">{selectedPage?.name || 'Workspace'}</p>
-            <h2>{selectedConversation?.title || 'No conversation selected'}</h2>
-          </div>
-          <div className="top-actions">
-            <div className="capture-button-group" ref={captureButtonGroupRef}>
-              <button
-                className="command-button"
-                onClick={() => handleCaptureTab()}
-                disabled={captureBusy}
-                title="Capture current tab (opens preview)"
-              >
-                <ExternalLink size={16} />
-                <span>{captureBusy ? 'Capturing...' : 'Capture'}</span>
-              </button>
-              <button
-                className="command-button mode-badge"
-                onClick={cycleCaptureMode}
-                disabled={captureBusy}
-                title={`Current mode: ${captureMode.charAt(0).toUpperCase() + captureMode.slice(1)}. Click to cycle.`}
-              >
-                <span className="mode-badge-text">
-                  {captureMode === 'full' ? 'F' : captureMode === 'standard' ? 'S' : 'M'}
-                </span>
-              </button>
-              <button
-                className="command-button dropdown-toggle"
-                onClick={() => {
-                  positionCaptureDropdown();
-                  setShowCaptureDropdown((prev) => !prev);
-                }}
-                aria-expanded={showCaptureDropdown}
-                aria-haspopup="true"
-                title="Capture options"
-              >
-                <ChevronDown size={14} />
-              </button>
-            </div>
-            {showCaptureDropdown &&
-              createPortal(
-                <div
-                  ref={captureDropdownRef}
-                  className="slash-suggestions top-more-menu capture-dropdown"
-                  onMouseDown={(event) => event.preventDefault()}
-                  style={{ ...captureDropdownStyle, pointerEvents: 'auto' }}
-                >
-                  <button
-                    className="slash-suggestion-item"
-                    onMouseDown={(event) => {
-                      event.preventDefault();
-                      handleCaptureTab();
-                      setShowCaptureDropdown(false);
-                    }}
-                  >
-                    <span className="slash-suggestion-name">
-                      <ExternalLink size={14} />
-                      Capture to Draft (Preview)
-                    </span>
-                  </button>
-                  <button
-                    className="slash-suggestion-item"
-                    onMouseDown={(event) => {
-                      event.preventDefault();
-                      handleCaptureAndSend();
-                      setShowCaptureDropdown(false);
-                    }}
-                  >
-                    <span className="slash-suggestion-name">
-                      <Send size={14} />
-                      Capture & Send
-                    </span>
-                  </button>
-                  <hr className="dropdown-divider" />
-                  <div className="mode-selector">
-                    <span className="mode-selector-label">Mode:</span>
-                    {(['full', 'standard', 'minimal'] as CaptureMode[]).map((mode) => (
-                      <button
-                        key={mode}
-                        className={`mode-selector-item ${captureMode === mode ? 'active' : ''}`}
-                        onMouseDown={(event) => {
-                          event.preventDefault();
-                          setCaptureMode(mode);
-                          setShowCaptureDropdown(false);
-                        }}
-                      >
-                        {mode === 'full' ? '📸 Full' : mode === 'standard' ? '📋 Standard' : '🔗 Minimal'}
-                      </button>
-                    ))}
-                  </div>
-                </div>,
-                document.body
-              )}
-            {toast && (
-              <div className={`toast toast-${toast.type}`}>
-                <span>{toast.type === 'success' ? '✓' : '!'}</span>
-                <span>{toast.message}</span>
-              </div>
-            )}
-            <div>
-              <button
-                ref={moreButtonRef}
-                className="command-button"
-                onClick={() => {
-                  positionMoreMenu();
-                  setMoreOpen((prev) => !prev);
-                }}
-                aria-expanded={moreOpen}
-                title="More actions"
-              >
-                <ChevronDown size={16} />
-                <span>More</span>
-              </button>
-              {moreOpen &&
-                createPortal(
-                  <div
-                    ref={moreMenuRef}
-                    className="slash-suggestions top-more-menu"
-                    onMouseDown={(event) => event.preventDefault()}
-                    style={{ ...moreMenuStyle, pointerEvents: 'auto' }}
-                  >
-                    <button className="slash-suggestion-item" onMouseDown={(event) => { event.preventDefault(); exportGeminiPrompt(); setMoreOpen(false); }}>
-                      <span className="slash-suggestion-name"><Bot size={14} /> Gemini</span>
-                    </button>
-                    <button className="slash-suggestion-item" onMouseDown={(event) => { event.preventDefault(); exportMarkdown(); setMoreOpen(false); }}>
-                      <span className="slash-suggestion-name"><FileDown size={14} /> Markdown</span>
-                    </button>
-                    <button className="slash-suggestion-item" onMouseDown={(event) => {
-                      event.preventDefault();
-                      const page = selectedPage;
-                      if (page) copyPageMarkdown(page, workspace.conversations, workspace.messages, workspace.bookmarks, showStatus);
-                      setMoreOpen(false);
-                    }}>
-                      <span className="slash-suggestion-name"><Copy size={14} /> Copy MD</span>
-                    </button>
-                    <button className="slash-suggestion-item" onMouseDown={(event) => { event.preventDefault(); exportJson(); setMoreOpen(false); }}>
-                      <span className="slash-suggestion-name"><Download size={14} /> JSON</span>
-                    </button>
-                  </div>,
-                  document.body
-                )}
-            </div>
-            {!fullWindow && (
-              <button className="icon-button" onClick={openFullWindow} title="Full Window">
-                <Maximize2 size={16} />
-              </button>
-            )}
+        {/* Title row — thin monospace page title with responsive letter-spacing */}
+        <div className="top-bar-title">
+          <span className={`top-bar-title-text${!selectedConversation?.title ? ' top-bar-title-solo' : ''}`}>
+            {selectedPage?.name || 'Workspace'}
+          </span>
+          {selectedConversation?.title && (
+            <>
+              <span className="top-bar-title-sep">/</span>
+              <span className="top-bar-title-conv">{selectedConversation.title}</span>
+            </>
+          )}
+        </div>
+
+        {/* Actions row — capture group, more, full, theme toggle */}
+        <div className="top-bar-actions">
+          <div className="capture-button-group" ref={captureButtonGroupRef}>
             <button
-              className="icon-button theme-toggle"
-              onClick={() => setTheme((prev) => (prev === 'light' ? 'dark' : 'light'))}
-              title={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
-              aria-label={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
+              className="command-button"
+              onClick={() => handleCaptureTab()}
+              disabled={captureBusy}
+              title="Capture current tab (opens preview)"
             >
-              {theme === 'light' ? <Moon size={16} /> : <Sun size={16} />}
+              <ExternalLink size={16} />
+              <span className="cmd-label">{captureBusy ? 'Capturing...' : 'Capture'}</span>
+            </button>
+            <button
+              className="command-button mode-badge"
+              onClick={cycleCaptureMode}
+              disabled={captureBusy}
+              title={`Current mode: ${captureMode.charAt(0).toUpperCase() + captureMode.slice(1)}. Click to cycle.`}
+            >
+              <span className="mode-badge-text">
+                {captureMode === 'full' ? 'F' : captureMode === 'standard' ? 'S' : 'M'}
+              </span>
+            </button>
+            <button
+              className="command-button dropdown-toggle"
+              onClick={() => {
+                positionCaptureDropdown();
+                setShowCaptureDropdown((prev) => !prev);
+              }}
+              aria-expanded={showCaptureDropdown}
+              aria-haspopup="true"
+              title="Capture options"
+            >
+              <ChevronDown size={14} />
             </button>
           </div>
+          {showCaptureDropdown &&
+            createPortal(
+              <div
+                ref={captureDropdownRef}
+                className="slash-suggestions top-more-menu capture-dropdown"
+                onMouseDown={(event) => event.preventDefault()}
+                style={{ ...captureDropdownStyle, pointerEvents: 'auto' }}
+              >
+                <button
+                  className="slash-suggestion-item"
+                  onMouseDown={(event) => {
+                    event.preventDefault();
+                    handleCaptureTab();
+                    setShowCaptureDropdown(false);
+                  }}
+                >
+                  <span className="slash-suggestion-name">
+                    <ExternalLink size={14} />
+                    Capture to Draft (Preview)
+                  </span>
+                </button>
+                <button
+                  className="slash-suggestion-item"
+                  onMouseDown={(event) => {
+                    event.preventDefault();
+                    handleCaptureAndSend();
+                    setShowCaptureDropdown(false);
+                  }}
+                >
+                  <span className="slash-suggestion-name">
+                    <Send size={14} />
+                    Capture & Send
+                  </span>
+                </button>
+                <hr className="dropdown-divider" />
+                <div className="mode-selector">
+                  <span className="mode-selector-label">Mode:</span>
+                  {(['full', 'standard', 'minimal'] as CaptureMode[]).map((mode) => (
+                    <button
+                      key={mode}
+                      className={`mode-selector-item ${captureMode === mode ? 'active' : ''}`}
+                      onMouseDown={(event) => {
+                        event.preventDefault();
+                        setCaptureMode(mode);
+                        setShowCaptureDropdown(false);
+                      }}
+                    >
+                      {mode === 'full' ? '📸 Full' : mode === 'standard' ? '📋 Standard' : '🔗 Minimal'}
+                    </button>
+                  ))}
+                </div>
+              </div>,
+              document.body
+            )}
+          {toast && (
+            <div className={`toast toast-${toast.type}`}>
+              <span>{toast.type === 'success' ? '✓' : '!'}</span>
+              <span>{toast.message}</span>
+            </div>
+          )}
+          <button
+            ref={moreButtonRef}
+            className="command-button"
+            onClick={() => {
+              positionMoreMenu();
+              setMoreOpen((prev) => !prev);
+            }}
+            aria-expanded={moreOpen}
+            title="More actions"
+          >
+            <ChevronDown size={16} />
+            <span className="cmd-label">More</span>
+          </button>
+          {moreOpen &&
+            createPortal(
+              <div
+                ref={moreMenuRef}
+                className="slash-suggestions top-more-menu"
+                onMouseDown={(event) => event.preventDefault()}
+                style={{ ...moreMenuStyle, pointerEvents: 'auto' }}
+              >
+                <button className="slash-suggestion-item" onMouseDown={(event) => { event.preventDefault(); exportGeminiPrompt(); setMoreOpen(false); }}>
+                  <span className="slash-suggestion-name"><Bot size={14} /> Gemini</span>
+                </button>
+                <button className="slash-suggestion-item" onMouseDown={(event) => { event.preventDefault(); exportMarkdown(); setMoreOpen(false); }}>
+                  <span className="slash-suggestion-name"><FileDown size={14} /> Markdown</span>
+                </button>
+                <button className="slash-suggestion-item" onMouseDown={(event) => {
+                  event.preventDefault();
+                  const page = selectedPage;
+                  if (page) copyPageMarkdown(page, workspace.conversations, workspace.messages, workspace.bookmarks, showStatus);
+                  setMoreOpen(false);
+                }}>
+                  <span className="slash-suggestion-name"><Copy size={14} /> Copy MD</span>
+                </button>
+                <button className="slash-suggestion-item" onMouseDown={(event) => { event.preventDefault(); exportJson(); setMoreOpen(false); }}>
+                  <span className="slash-suggestion-name"><Download size={14} /> JSON</span>
+                </button>
+              </div>,
+              document.body
+            )}
+          {!fullWindow && (
+            <button className="icon-button" onClick={openFullWindow} title="Full Window">
+              <Maximize2 size={16} />
+            </button>
+          )}
+          <button
+            className="icon-button theme-toggle"
+            onClick={() => setTheme((prev) => (prev === 'light' ? 'dark' : 'light'))}
+            title={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
+            aria-label={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
+          >
+            {theme === 'light' ? <Moon size={16} /> : <Sun size={16} />}
+          </button>
         </div>
 
         {viewMode === 'chat' && (
