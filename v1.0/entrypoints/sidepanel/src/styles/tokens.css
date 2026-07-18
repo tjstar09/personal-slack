@@ -68,6 +68,11 @@
   --z-modal: 1000;
   --z-toast: 2000;
   --z-onboarding: 3000;
+  
+  /* Breakpoints (used in media queries) */
+  --bp-narrow: 560px;
+  --bp-tablet: 720px;
+  --bp-wide: 960px;
 }
 
 /* ==========================================================================

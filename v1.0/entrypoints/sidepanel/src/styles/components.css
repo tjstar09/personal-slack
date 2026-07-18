@@ -421,17 +421,93 @@ h2 {
   border-color: var(--color-border);
 }
 
-/* Top bar */
-.top-bar {
-  min-height: 70px;
-  padding: var(--space-4) var(--space-4);
+/* ==========================================================================
+   TOP BAR — title row + actions row
+   ========================================================================== */
+
+/* Title row — thin monospace breadcrumb */
+.top-bar-title {
+  min-height: 28px;
+  padding: var(--space-1) var(--space-4);
   background: var(--color-surface);
   border-bottom: 3px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  overflow: hidden;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.top-actions {
+.top-bar-title-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.top-bar-title-text.top-bar-title-solo {
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.top-bar-title-sep {
+  flex-shrink: 0;
+  color: var(--color-border-subtle);
+  margin: 0 var(--space-1);
+}
+
+.top-bar-title-conv {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--color-text);
+  font-weight: 700;
+}
+
+/* Responsive letter-spacing for title */
+.top-bar-title-text,
+.top-bar-title-conv {
+  letter-spacing: clamp(0.3px, 0.5vw, 1.5px);
+}
+
+/* Actions row — capture group, more, full, theme toggle — all in one row */
+.top-bar-actions {
   position: relative;
+  display: flex;
+  align-items: center;
   gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  min-height: 52px;
+  background: var(--color-surface);
+  border-bottom: 3px solid var(--color-border);
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Ensure all action buttons stay in one row and shrink gracefully */
+.top-bar-actions .command-button,
+.top-bar-actions .icon-button,
+.top-bar-actions .capture-button-group {
+  flex-shrink: 0;
+}
+
+.top-bar-actions .capture-button-group {
+  flex-shrink: 0;
+}
+
+/* Command label spans — hide progressively on narrow widths */
+@media (max-width: 560px) {
+  .top-bar-actions {
+    padding: var(--space-2) var(--space-3);
+    gap: var(--space-1);
+  }
 }
 
 /* Capture button group */
