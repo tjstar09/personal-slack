@@ -71,6 +71,8 @@ Use these friendly names in prompts. The AI resolves them to exact elements.
 | animated preview | animated-preview | `.short-preview-animated` | markdown-preview |
 | GitHub panel | github-panel | `.github-panel` | message-previews |
 | link preview card | link-preview | `.link-preview-card` | message-previews |
+| theme toggle (sun) | theme-toggle-sun | `.theme-toggle-sun` | more-menu |
+| theme toggle (moon) | theme-toggle-moon | `.theme-toggle-moon` | more-menu |
 
 ---
 

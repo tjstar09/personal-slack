@@ -72,24 +72,50 @@ Context menu click / keyboard shortcut
 
 ---
 
-## Design System (v1.0 — Neobrutalism Migration)
+## Design System (v1.0 — Neobrutalism Migration + Theme Toggle)
 
 ### Design Language: Neobrutalism (from `.agents/skills/awesome-design-skills-main/skills/neobrutalism/`)
-- **Light-only theme** with warm off-white surface (`#FBFBF9`)
-- **Bold 3px borders** on all interactive elements using navy (`#1C293C`)
-- **Yellow primary accent** (`#FDC800`), **purple secondary** (`#432DD7`)
+- **Dual-mode theme**: both light and dark themes fully polished
+- **Light mode**: warm off-white surface (`#FBFBF9`), navy borders (`#1C293C`)
+- **Dark mode**: near-black warm surface (`#0F1419`), warm white borders (`#FBFBF9`)
+- **Yellow primary accent** (`#FDC800`) — unchanged in both modes
+- **Purple secondary** (`#432DD7` light / `#A78BFA` dark)
 - **Offset hover states** with `translate(-2px, -2px)`
 - **Inter + JetBrains Mono** typography via Google Fonts
 - **Sharp corners** (4px max radius) on primary buttons
 - **3px focus outlines** for accessibility
 - No gradients, glows, or subtle shadows — borders provide elevation
 
+### Theme Toggle Implementation
+- **Mechanism**: `.dark` class on `<html>` element toggles all color tokens
+- **Persistence**: User preference saved to `chrome.storage.local` (`theme-preference` key)
+- **System fallback**: On first load, respects `prefers-color-scheme: dark` if no saved preference
+- **UI**: Sun/moon icons in "More actions" dropdown (top bar)
+- **Storage**: `loadThemePreference()` / `saveThemePreference()` in `storage.ts`
+- **React state**: Managed in `App.tsx` with `useEffect` for load/apply/persist
+
+### CSS Architecture (Phase 3 — Modular Refactor)
+The monolithic `styles.css` (~2053 lines) was split into 7 modules:
+
+| Module | Path | Responsibility |
+|--------|------|----------------|
+| `tokens.css` | `styles/tokens.css` | CSS variables, theme tokens (light/dark), breakpoints |
+| `reset.css` | `styles/reset.css` | CSS reset, base styles, font imports |
+| `layout.css` | `styles/layout.css` | App shell, rail, sidebar, main-panel, grid layout |
+| `components.css` | `styles/components.css` | Buttons, cards, inputs, tags, modals, dropdowns, toasts |
+| `chat.css` | `styles/chat.css` | Markdown rendering, message stream, composer, previews |
+| `views.css` | `styles/views.css` | Gallery, bookmarks, settings, onboarding, send-to-page |
+| `animations.css` | `styles/animations.css` | Keyframes, transitions, micro-interactions |
+| `responsive.css` | `styles/responsive.css` | Media queries, tablet breakpoint, print styles |
+
+**Entry point**: `styles/index.css` imports all modules in order.
+**Build**: Both `sidepanel` and `popup` entrypoints import `styles/index.css`.
+
 ### Migration Notes (2025-07-16)
 - Previous design: Custom Dark Theme (teal accent `#25c2a0`, dark backgrounds `#111418`)
-- Updated: `DESIGN.md` (design tokens), `v1.0/entrypoints/sidepanel/src/styles.css` (full CSS migration)
-- Both `sidepanel` and `popup` entrypoints share the same stylesheet
+- Updated: `DESIGN.md` (design tokens), `v1.0/entrypoints/sidepanel/src/styles/` (modular CSS)
+- Both `sidepanel` and `popup` entrypoints share the same modular stylesheet
 - Font imports changed from Outfit/Geist to Inter/JetBrains Mono
-- Legacy CSS variables aliased to new Neobrutalism tokens for backward compatibility
 
 ---
 

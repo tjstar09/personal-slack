@@ -48,15 +48,35 @@ Current active version. Older v0.1/v0.2 features are archived in collapsible blo
 ## v1.0 Design Migration — Neobrutalism (✅ Done)
 
 - [x] Migrate from Custom Dark Theme to Neobrutalism design system
-- [x] Light-only theme with warm off-white surface (`#FBFBF9`)
-- [x] Bold 3px borders on all interactive elements using navy (`#1C293C`)
-- [x] Yellow primary accent (`#FDC800`), purple secondary (`#432DD7`)
+- [x] **Dual-mode theme**: both light and dark themes fully polished
+- [x] Light mode: warm off-white surface (`#FBFBF9`), navy borders (`#1C293C`)
+- [x] Dark mode: near-black warm surface (`#0F1419`), warm white borders (`#FBFBF9`)
+- [x] Yellow primary accent (`#FDC800`) — unchanged in both modes
+- [x] Purple secondary (`#432DD7` light / `#A78BFA` dark)
 - [x] Offset hover states with `translate(-2px, -2px)`
 - [x] Inter + JetBrains Mono typography via Google Fonts
 - [x] Sharp corners (4px max radius) on primary buttons
 - [x] 3px focus outlines for accessibility
 - [x] Both sidepanel and popup entrypoints updated
 - [x] DESIGN.md updated with new tokens and patterns
+
+## v1.0 Theme Toggle (✅ Done - Phases 1-6)
+
+- [x] **Phase 1**: Remove legacy CSS aliases and dead `.dark` class (cleanup)
+- [x] **Phase 2**: Implement theme toggle UI (sun/moon icons in More actions dropdown)
+- [x] **Phase 2**: Wire `.dark` class toggle on `<html>` element
+- [x] **Phase 2**: Persist theme preference to `chrome.storage.local` (`theme-preference` key)
+- [x] **Phase 2**: System preference fallback via `prefers-color-scheme: dark`
+- [x] **Phase 3**: Refactor monolithic `styles.css` into modular architecture:
+  - `tokens.css` — CSS variables, theme tokens
+  - `layout.css` — app-shell, rail, sidebar, main-panel
+  - `components.css` — buttons, cards, inputs, tags, modals
+  - `chat.css` — markdown, message stream, composer
+  - `views.css` — gallery, bookmarks, settings
+  - `animations.css` — keyframes, transitions
+  - `responsive.css` — media queries, print
+- [x] **Phase 4**: Add skeleton loading states, micro-interactions, custom scrollbars, `--space-5` (20px)
+- [x] **Phase 5**: Accessibility improvements — dedicated `--color-focus`, `prefers-contrast` support, keyboard improvements
 
 ## v1.0 Phase 3 — Local AI Teammate (🔄 Planned)
 
