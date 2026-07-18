@@ -42,10 +42,32 @@ button {
   color: inherit;
 }
 
-/* Focus styles for accessibility */
+/* Focus styles for accessibility — use softer focus ring */
 *:focus-visible {
-  outline: 3px solid var(--color-border);
+  outline: 3px solid var(--color-focus);
   outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* High contrast mode overrides */
+@media (prefers-contrast: more) {
+  *:focus-visible {
+    outline: 3px solid var(--color-border);
+    outline-offset: 2px;
+  }
+  
+  .message-bubble,
+  .conversation-card,
+  .command-button,
+  .send-button,
+  .icon-button,
+  .tag,
+  .bookmark-chip,
+  .link-preview-card,
+  .gallery-card,
+  .bookmark-card {
+    border-width: 3px !important;
+  }
 }
 
 /* ==========================================================================

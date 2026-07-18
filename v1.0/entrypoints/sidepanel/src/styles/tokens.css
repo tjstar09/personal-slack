@@ -25,6 +25,7 @@
   --color-border: #1C293C;        /* All borders - high contrast */
   --color-border-subtle: #E5E7EB; /* Subtle borders for nested elements */
   --color-muted: #6B7280;         /* Muted text, placeholders */
+  --color-focus: #432DD780;       /* Semi-transparent purple for focus rings */
   
   /* Shadows - minimal, borders preferred for elevation */
   --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
@@ -89,6 +90,7 @@
   --color-border: #FBFBF9;        /* ALL borders - warm white (key neobrutalism trait) */
   --color-border-subtle: #374151; /* Subtle borders for nested elements */
   --color-muted: #D1D5DB;         /* Muted text, placeholders (lighter for visibility) */
+  --color-focus: #A78BFA80;       /* Semi-transparent purple for focus rings (dark mode) */
   
   /* Shadows - minimal, borders preferred for elevation */
   /* Dark mode shadows use rgba(0,0,0, higher alpha) for depth */
