@@ -1,0 +1,116 @@
+/* ==========================================================================
+   RESPONSIVE — breakpoint-aware layout adjustments
+   ========================================================================== */
+
+/* Narrow side panel / popup */
+@media (max-width: 560px) {
+  body {
+    min-width: 320px;
+  }
+
+  .app-shell {
+    grid-template-columns: 48px minmax(150px, 42vw) minmax(0, 1fr);
+  }
+
+  .sidebar {
+    padding: var(--space-3);
+  }
+
+  .top-bar {
+    padding: var(--space-3);
+  }
+
+  .command-button span,
+  .send-button span {
+    display: none;
+  }
+
+  .composer-tools,
+  .stats-row {
+    grid-template-columns: 1fr;
+    display: grid;
+  }
+
+  .stats-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .coverflow-item {
+    width: 240px;
+    height: 260px;
+  }
+
+  .gallery-nav {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+/* Tablet / medium popup window */
+@media (min-width: 561px) and (max-width: 720px) {
+  .app-shell {
+    grid-template-columns: 48px minmax(160px, 220px) minmax(0, 1fr);
+  }
+
+  .sidebar {
+    padding: var(--space-3);
+  }
+
+  .top-bar {
+    padding: var(--space-3);
+  }
+
+  .command-button span,
+  .send-button span {
+    display: none;
+  }
+
+  .stats-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .coverflow-item {
+    width: 260px;
+    height: 280px;
+  }
+}
+
+/* Wide layout — full popup window */
+@media (min-width: 961px) {
+  .app-shell {
+    grid-template-columns: 56px minmax(220px, 300px) minmax(0, 1fr);
+  }
+
+  .chat-layout {
+    grid-template-rows: minmax(160px, 30vh) minmax(0, 1fr) auto auto;
+  }
+}
+
+/* ==========================================================================
+   PRINT STYLES
+   ========================================================================== */
+@media print {
+  .rail,
+  .sidebar,
+  .top-bar,
+  .composer,
+  .toast,
+  .main-status,
+  .sendto-overlay,
+  .onboarding-overlay {
+    display: none !important;
+  }
+  
+  .app-shell {
+    grid-template-columns: 1fr;
+  }
+  
+  .main-panel {
+    height: auto;
+    overflow: visible;
+  }
+  
+  .message-stream {
+    overflow: visible;
+  }
+}
