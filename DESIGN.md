@@ -2,8 +2,8 @@
 
 This document defines the active design system for the Personal Slack extension. It serves as the single source of truth for design tokens, component patterns, and visual identity.
 
-**Active Design**: Neobrutalism (from `.agents/skills/awesome-design-skills-main/skills/neobrutalism/`) — **Dark Mode Enabled**
-**Last Updated**: 2025-07-17
+**Active Design**: Neobrutalism (from `.agents/skills/awesome-design-skills-main/skills/neobrutalism/`) — **Dual Mode: Light & Dark**
+**Last Updated**: 2025-07-18
 
 ---
 
@@ -29,25 +29,33 @@ This document defines the active design system for the Personal Slack extension.
 | `--color-neutral` | `#FBFBF9` | Neutral backgrounds (same as surface) |
 | `--color-muted` | `#6B7280` | Muted text, placeholders, secondary info |
 
-### Color Palette — Dark Mode (`@media (prefers-color-scheme: dark)`)
+### Color Palette — Dark Mode (`.dark` class on `<html>`)
 
 | Token | Value | Usage |
 |-------|-------|-------|
-| `--color-primary` | `#FDC800` | Primary accent (yellow) — **unchanged, pops on dark** |
-| `--color-primary-hover` | `#F5C000` | Slightly darker yellow for hover |
-| `--color-secondary` | `#A78BFA` | Secondary accent (light purple) — lightened for dark mode |
-| `--color-secondary-hover` | `#8B5CF6` | Brighter purple hover |
+| `--color-primary` | `#A78BFA` | Primary accent (purple) — lightened for dark mode |
+| `--color-primary-hover` | `#8B5CF6` | Purple hover |
+| `--color-secondary` | `#FDC800` | Secondary accent (yellow) — **unchanged**, pops on dark |
+| `--color-secondary-hover` | `#F5C000` | Yellow hover |
 | `--color-success` | `#4ADE80` | Success states — lightened for dark mode |
 | `--color-warning` | `#FBBF24` | Warning states — lightened for dark mode |
 | `--color-danger` | `#F87171` | Error, destructive — lightened for dark mode |
 | `--color-surface` | `#0F1419` | Primary background — near-black warm dark |
-| `--color-surface-elevated` | `#1C293C` | Elevated surfaces (cards, panels, modals) |
+| `--color-surface-elevated` | `#1C293C` | Elevated surfaces (cards, panels, modals, dropdowns) |
 | `--color-text` | `#FBFBF9` | Primary text — warm white |
 | `--color-text-muted` | `#D1D5DB` | Muted text, placeholders (lighter for visibility) |
 | `--color-border` | `#FBFBF9` | **All borders — warm white (key neobrutalism trait)** |
 | `--color-border-subtle` | `#374151` | Subtle borders for nested elements |
 | `--color-neutral` | `#0F1419` | Neutral backgrounds (same as surface) |
 | `--color-muted` | `#D1D5DB` | Muted text, placeholders, secondary info (lighter for visibility) |
+
+### Theme Toggle Implementation
+
+The theme toggle is implemented via a `.dark` class on the `<html>` element:
+- **Light mode (default)**: No class on `<html>`, uses `:root` tokens
+- **Dark mode**: `.dark` class on `<html>`, overrides all color tokens
+- **Persistence**: User preference saved to `chrome.storage.local` under key `theme-preference`
+- **System preference fallback**: On first load, respects `prefers-color-scheme: dark` if no saved preference
 
 ### Typography
 
@@ -74,6 +82,7 @@ Base unit: 4px
 | `--space-2` | 8px |
 | `--space-3` | 12px |
 | `--space-4` | 16px |
+| `--space-5` | 20px |
 | `--space-6` | 24px |
 | `--space-8` | 32px |
 | `--space-12` | 48px |
@@ -102,6 +111,12 @@ Neobrutalism uses **bold borders instead of shadows** for elevation. Minimal sha
 
 **Primary elevation**: `border: 3px solid var(--color-border)` + `transform: translate(-2px, -2px)` on hover/active
 
+**Dark mode shadows** (used sparingly):
+- `--shadow-sm`: `0 1px 2px rgba(0,0,0,0.3)`
+- `--shadow-md`: `0 4px 12px rgba(0,0,0,0.4)`
+- `--shadow-lg`: `0 8px 24px rgba(0,0,0,0.5)`
+- `--shadow-xl`: `0 16px 48px rgba(0,0,0,0.6)`
+
 ### Transitions
 
 | Token | Value |
@@ -126,18 +141,19 @@ Neobrutalism uses **bold borders instead of shadows** for elevation. Minimal sha
 
 ### Brand Personality
 - **Bold, raw, high-contrast, developer-focused**
-- Dark-first interface optimized for side-panel usage
+- **Dual-mode interface** — both light and dark themes fully polished
 - Sharp edges, thick borders, vivid accent colors
 - No gradients, no glows, no subtle shadows — honest, unapologetic UI
 
 ### Key Visual Characteristics
-1. **Dark theme default** — near-black warm surface (`#0F1419`)
-2. **Thick white/light borders everywhere** — 2-4px solid `#FBFBF9` on all interactive elements
-3. **High contrast** — warm white text (`#FBFBF9`) on near-black
-4. **Yellow primary** (`#FDC800`) for CTAs, purple secondary (`#A78BFA`) for alternatives
+1. **Dual theme support** — both light and dark themes are first-class citizens
+2. **Thick borders everywhere** — 2-4px solid borders on all interactive elements
+3. **High contrast** — warm white text on near-black (dark) / dark navy on warm off-white (light)
+4. **Yellow primary** (`#FDC800`) for CTAs, purple secondary (`#A78BFA` dark / `#432DD7` light) for alternatives
 5. **Offset hover states** — elements shift `translate(-2px, -2px)` with border emphasis
 6. **No border-radius on primary buttons** — sharp corners (4px max for inputs)
 7. **Monospace for labels/captions** — JetBrains Mono for technical feel
+8. **Theme toggle** — sun/moon icon button in top bar (More actions dropdown)
 
 ---
 
@@ -236,6 +252,7 @@ Neobrutalism uses **bold borders instead of shadows** for elevation. Minimal sha
 - ❌ Breaking the 4px spacing grid
 - ❌ Overriding focus styles for aesthetics
 - ❌ Using light mode tokens in dark mode without adaptation
+- ❌ Assuming dark mode is the only theme — **both themes must render correctly**
 
 ---
 
@@ -270,7 +287,7 @@ When switching to a new design skill (e.g., from `.agents/skills/awesome-design-
 
 ## References
 
-- Current implementation: `v1.0/entrypoints/sidepanel/src/styles.css`
+- Current implementation: `v1.0/entrypoints/sidepanel/src/styles/tokens.css` (modular CSS)
 - Available design skills: `.agents/skills/awesome-design-skills-main/skills/`
 - Design skill registry: `.agents/skills/awesome-design-skills-main/skills/index.json`
 - Neobrutalism skill: `.agents/skills/awesome-design-skills-main/skills/neobrutalism/SKILL.md`

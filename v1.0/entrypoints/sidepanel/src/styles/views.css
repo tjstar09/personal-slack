@@ -1,0 +1,414 @@
+/* ==========================================================================
+   VIEWS — gallery, bookmarks, settings
+   ========================================================================== */
+
+/* Gallery View */
+.gallery-view {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.gallery-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  border-bottom: 3px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.gallery-nav {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-muted);
+  border: 2px solid var(--color-border);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+}
+
+.gallery-nav:hover:not(:disabled) {
+  color: var(--color-text);
+  transform: translate(-2px, -2px);
+  border-color: var(--color-border);
+}
+
+.gallery-nav:active:not(:disabled) {
+  transform: translate(1px, 1px);
+}
+
+.gallery-nav:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.gallery-counter {
+  font-size: 13px;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  color: var(--color-text-muted);
+}
+
+.coverflow {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1000px;
+  padding: var(--space-4);
+}
+
+.coverflow-item {
+  position: absolute;
+  width: 320px;
+  height: 400px;
+  border: 3px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: all var(--transition-normal);
+  transform-style: preserve-3d;
+}
+
+.coverflow-item:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: var(--shadow-xl);
+}
+
+.coverflow-item.active {
+  z-index: 10;
+}
+
+.coverflow-item-inner {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-4);
+  overflow: hidden;
+}
+
+.coverflow-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--space-2);
+}
+
+.coverflow-item-title {
+  font-weight: 750;
+  font-size: 15px;
+  color: var(--color-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.coverflow-item-summary {
+  flex: 1;
+  color: var(--color-text-muted);
+  font-size: 13px;
+  line-height: 1.5;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  margin: var(--space-2) 0;
+}
+
+.coverflow-item-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+  margin-top: auto;
+  padding-top: var(--space-2);
+  border-top: 2px solid var(--color-border-subtle);
+}
+
+.gallery-empty {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  padding: var(--space-8);
+  text-align: center;
+  color: var(--color-muted);
+}
+
+.gallery-empty p {
+  margin: 0;
+  font-size: 14px;
+}
+
+/* Bookmarks Grid View */
+.bookmarks-grid {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: var(--space-4);
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-4);
+}
+
+.bookmark-card {
+  display: flex;
+  flex-direction: column;
+  border: 3px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  text-decoration: none;
+  color: inherit;
+  overflow: hidden;
+  transition: all var(--transition-fast);
+}
+
+.bookmark-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.bookmark-card img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-bottom: 2px solid var(--color-border);
+}
+
+.bookmark-card-icon {
+  width: 100%;
+  height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-surface-elevated);
+  border-bottom: 2px solid var(--color-border);
+  color: var(--color-muted);
+}
+
+.bookmark-card > div:last-child {
+  flex: 1;
+  padding: var(--space-3);
+  display: flex;
+  flex-direction: column;
+}
+
+.bookmark-card-title {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--color-text);
+  margin-bottom: var(--space-1);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bookmark-card p {
+  margin: 0 0 var(--space-2);
+  font-size: 12px;
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+}
+
+.bookmark-card span {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-family: var(--font-mono);
+}
+
+/* Settings Panel */
+.settings-panel {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-4);
+}
+
+.stat {
+  padding: var(--space-4);
+  border: 3px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  text-align: center;
+}
+
+.stat strong {
+  display: block;
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--color-primary);
+  line-height: 1;
+  margin-bottom: var(--space-1);
+}
+
+.stat span {
+  font-size: 12px;
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.settings-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.settings-section {
+  border: 3px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  background: var(--color-surface);
+}
+
+.settings-section-title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-4);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.drive-sync-controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.drive-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  cursor: pointer;
+}
+
+.drive-toggle input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--color-primary);
+  cursor: pointer;
+}
+
+.drive-toggle span {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.drive-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.drive-field span {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.drive-field input {
+  height: 40px;
+  padding: 0 var(--space-3);
+  border: 3px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: 13px;
+}
+
+.drive-field input:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--color-primary);
+}
+
+.drive-last-synced {
+  margin: var(--space-2) 0 0;
+  font-size: 12px;
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+}
+
+.setup-note {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border: 2px solid var(--color-border-subtle);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-elevated);
+  color: var(--color-text-muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.danger-button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 40px;
+  border: 3px solid var(--color-danger);
+  border-radius: var(--radius-sm);
+  padding: 0 var(--space-3);
+  color: var(--color-danger);
+  background: var(--color-surface);
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 13px;
+  transition: all var(--transition-fast);
+}
+
+.danger-button:hover {
+  background: var(--color-danger);
+  color: white;
+  transform: translate(-2px, -2px);
+}
+
+.danger-button:active {
+  transform: translate(1px, 1px);
+}
+
+.status-line {
+  padding: var(--space-2) var(--space-3);
+  border: 3px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: 12px;
+  font-family: var(--font-mono);
+}

@@ -31,6 +31,8 @@ import type { WorkspaceData } from './types';
 
 const hasChromeStorage = () => typeof chrome !== 'undefined' && Boolean(chrome.storage?.local);
 
+const THEME_STORAGE_KEY = 'theme-preference';
+
 export const loadWorkspace = async (): Promise<WorkspaceData> => {
   if (!hasChromeStorage()) {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -48,4 +50,20 @@ export const saveWorkspace = async (workspace: WorkspaceData) => {
   }
 
   await chrome.storage.local.set({ [STORAGE_KEY]: workspace });
+};
+
+export const loadThemePreference = async (): Promise<'light' | 'dark' | null> => {
+  if (!hasChromeStorage()) {
+    return localStorage.getItem(THEME_STORAGE_KEY) as 'light' | 'dark' | null;
+  }
+  const result = await chrome.storage.local.get(THEME_STORAGE_KEY);
+  return result[THEME_STORAGE_KEY] as 'light' | 'dark' | null;
+};
+
+export const saveThemePreference = async (theme: 'light' | 'dark') => {
+  if (!hasChromeStorage()) {
+    localStorage.setItem(THEME_STORAGE_KEY, theme);
+    return;
+  }
+  await chrome.storage.local.set({ [THEME_STORAGE_KEY]: theme });
 };
