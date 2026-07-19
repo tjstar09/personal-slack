@@ -284,7 +284,7 @@ h2 {
 /* Mode tabs */
 .mode-tabs {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   padding: var(--space-1);
   border-radius: var(--radius-sm);
   background: var(--color-surface);
@@ -308,6 +308,18 @@ h2 {
 .mode-button.active {
   color: var(--color-text);
   background: var(--color-primary);
+  border-color: var(--color-border);
+}
+
+/* Delete page button inside mode-tabs */
+.page-delete-tab {
+  color: var(--color-danger);
+  border-color: transparent;
+}
+
+.page-delete-tab:hover {
+  color: var(--color-text);
+  background: var(--color-danger);
   border-color: var(--color-border);
 }
 

@@ -1737,7 +1737,7 @@ h2 {
   font-size: 12px;
   line-height: 1.4;
   z-index: var(--z-toast);
-  animation: statusFadeIn var(--transition-fast) ease-out, statusFadeOut var(--transition-normal) ease-in 4.6s forwards;
+  animation: statusFadeIn var(--transition-fast) ease-out, statusFadeOut var(--transition-normal) ease-in 2.6s forwards;
 }
 
 @keyframes statusFadeIn {

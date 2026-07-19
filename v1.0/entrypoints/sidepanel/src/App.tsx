@@ -224,16 +224,18 @@ export function App({ fullWindow = false }: { fullWindow?: boolean }) {
     });
   }, []);
 
-  // Show status with auto-fade after 5 seconds
+  // Show status with auto-fade after 3 seconds
   const showStatus = useCallback((msg: string) => {
     setStatus(msg);
+    setToast(null); // clear any active toast
     if (statusTimerRef.current) clearTimeout(statusTimerRef.current);
-    statusTimerRef.current = setTimeout(() => setStatus(''), 5000);
+    statusTimerRef.current = setTimeout(() => setStatus(''), 3000);
   }, []);
 
   // Show toast notification with auto-fade after 3 seconds
   const showToast = useCallback((message: string, type: 'success' | 'error' = 'success') => {
     setToast({ message, type });
+    setStatus(''); // clear any active status
     if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
     toastTimerRef.current = setTimeout(() => setToast(null), 3000);
   }, []);
@@ -1042,9 +1044,6 @@ export function App({ fullWindow = false }: { fullWindow?: boolean }) {
         </button>
         <nav className="page-list">
           {workspace.pages.map((page) => {
-            const isDefaultPage = [BOOKMARKS_PAGE_ID, 'page-notes', MELTED_TABS_PAGE_ID].includes(page.id);
-            const isLastPage = workspace.pages.length <= 1;
-            const canDelete = !isDefaultPage && !isLastPage;
             return (
               <div key={page.id} className="page-button-wrapper" style={{ position: 'relative', width: '100%' }}>
                 <button
@@ -1055,20 +1054,6 @@ export function App({ fullWindow = false }: { fullWindow?: boolean }) {
                   {page.kind === 'bookmarks' ? <Bookmark size={17} /> : <Hash size={17} />}
                   <span>{page.name.slice(0, 1).toUpperCase()}</span>
                 </button>
-                {canDelete && (
-                  <button
-                    className="mini-button page-delete-button"
-                    title="Delete page"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      if (window.confirm(`Delete page "${page.name}"? This will also delete all conversations and messages in this page.`)) {
-                        deletePage(page.id);
-                      }
-                    }}
-                  >
-                    <Trash2 size={13} />
-                  </button>
-                )}
               </div>
             );
           })}
@@ -1113,6 +1098,25 @@ export function App({ fullWindow = false }: { fullWindow?: boolean }) {
           <ModeButton mode="gallery" active={viewMode} setActive={setViewMode} icon={<GalleryVerticalEnd size={16} />} />
           <ModeButton mode="bookmarks" active={viewMode} setActive={setViewMode} icon={<Bookmark size={16} />} />
           <ModeButton mode="settings" active={viewMode} setActive={setViewMode} icon={<Settings size={16} />} />
+          {selectedPage && (() => {
+            const isDefaultPage = [BOOKMARKS_PAGE_ID, 'page-notes', MELTED_TABS_PAGE_ID].includes(selectedPage.id);
+            const isLastPage = workspace.pages.length <= 1;
+            const canDelete = !isDefaultPage && !isLastPage;
+            return canDelete ? (
+              <button
+                className="mode-button page-delete-tab"
+                title="Delete page"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (window.confirm(`Delete page "${selectedPage.name}"? This will also delete all conversations and messages in this page.`)) {
+                    deletePage(selectedPage.id);
+                  }
+                }}
+              >
+                <Trash2 size={14} />
+              </button>
+            ) : null;
+          })()}
         </div>
 
         {allTags.length > 0 && (
