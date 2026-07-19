@@ -639,6 +639,66 @@ export function App({ fullWindow = false }: { fullWindow?: boolean }) {
     setStatus(`Created ${name}.`);
   };
 
+  const deletePage = (pageId: string) => {
+    // Prevent deletion of default pages
+    const defaultPageIds = [BOOKMARKS_PAGE_ID, 'page-notes', MELTED_TABS_PAGE_ID];
+    if (defaultPageIds.includes(pageId)) {
+      showToast('Cannot delete default pages.', 'error');
+      return;
+    }
+    // Prevent deletion if it's the last page
+    if (workspace.pages.length <= 1) {
+      showToast('Cannot delete the last page.', 'error');
+      return;
+    }
+    
+    const pageToDelete = workspace.pages.find((p) => p.id === pageId);
+    const pageName = pageToDelete?.name || 'page';
+    
+    setWorkspace((current) => {
+      // Filter out the page
+      const newPages = current.pages.filter((page) => page.id !== pageId);
+      
+      // Filter out conversations belonging to this page
+      const newConversations = current.conversations.filter((conv) => conv.pageId !== pageId);
+      
+      // Filter out messages belonging to conversations on this page
+      const conversationIdsToDelete = current.conversations
+        .filter((conv) => conv.pageId === pageId)
+        .map((conv) => conv.id);
+      const newMessages = current.messages.filter((msg) => !conversationIdsToDelete.includes(msg.conversationId));
+      
+      // Filter out bookmarks belonging to conversations on this page
+      const newBookmarks = current.bookmarks.filter((bookmark) => !conversationIdsToDelete.includes(bookmark.conversationId));
+      
+      // Determine new selected page
+      let newSelectedPageId = current.selectedPageId;
+      if (current.selectedPageId === pageId) {
+        newSelectedPageId = newPages[0]?.id || '';
+      }
+      
+      // Determine new selected conversation
+      let newSelectedConversationId = current.selectedConversationId;
+      if (conversationIdsToDelete.includes(current.selectedConversationId)) {
+        newSelectedConversationId = newConversations[0]?.id || '';
+      }
+      
+      return {
+        ...current,
+        pages: newPages,
+        conversations: newConversations,
+        messages: newMessages,
+        bookmarks: newBookmarks,
+        selectedPageId: newSelectedPageId,
+        selectedConversationId: newSelectedConversationId,
+        updatedAt: new Date().toISOString(),
+      };
+    });
+    
+    setDraft((current) => ({ ...current, pageId: workspace.pages.find((p) => p.id !== pageId)?.id || BOOKMARKS_PAGE_ID }));
+    showToast(`Deleted "${pageName}".`, 'success');
+  };
+
   const createNewConversation = () => {
     const pageId = selectedPage?.id || BOOKMARKS_PAGE_ID;
     const conversation = createConversation(pageId);
@@ -981,17 +1041,37 @@ export function App({ fullWindow = false }: { fullWindow?: boolean }) {
           {sidebarCollapsed ? <PanelRightClose size={20} /> : <PanelRightOpen size={20} />}
         </button>
         <nav className="page-list">
-          {workspace.pages.map((page) => (
-            <button
-              key={page.id}
-              className={page.id === selectedPage?.id ? 'page-button active' : 'page-button'}
-              onClick={() => selectPage(page.id)}
-              title={page.name}
-            >
-              {page.kind === 'bookmarks' ? <Bookmark size={17} /> : <Hash size={17} />}
-              <span>{page.name.slice(0, 1).toUpperCase()}</span>
-            </button>
-          ))}
+          {workspace.pages.map((page) => {
+            const isDefaultPage = [BOOKMARKS_PAGE_ID, 'page-notes', MELTED_TABS_PAGE_ID].includes(page.id);
+            const isLastPage = workspace.pages.length <= 1;
+            const canDelete = !isDefaultPage && !isLastPage;
+            return (
+              <div key={page.id} className="page-button-wrapper" style={{ position: 'relative', width: '100%' }}>
+                <button
+                  className={page.id === selectedPage?.id ? 'page-button active' : 'page-button'}
+                  onClick={() => selectPage(page.id)}
+                  title={page.name}
+                >
+                  {page.kind === 'bookmarks' ? <Bookmark size={17} /> : <Hash size={17} />}
+                  <span>{page.name.slice(0, 1).toUpperCase()}</span>
+                </button>
+                {canDelete && (
+                  <button
+                    className="mini-button page-delete-button"
+                    title="Delete page"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (window.confirm(`Delete page "${page.name}"? This will also delete all conversations and messages in this page.`)) {
+                        deletePage(page.id);
+                      }
+                    }}
+                  >
+                    <Trash2 size={13} />
+                  </button>
+                )}
+              </div>
+            );
+          })}
         </nav>
       </aside>
 

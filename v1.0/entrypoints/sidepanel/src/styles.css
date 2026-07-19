@@ -276,6 +276,36 @@ button {
   box-shadow: inset 4px 0 0 var(--color-border);
 }
 
+/* Page button wrapper for delete button */
+.page-button-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.page-delete-button {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  transition: opacity var(--transition-fast), transform var(--transition-fast);
+  color: var(--color-danger);
+  border-color: var(--color-danger);
+}
+
+.page-button-wrapper:hover .page-delete-button {
+  opacity: 1;
+}
+
+.page-delete-button:hover {
+  color: var(--color-text);
+  background: var(--color-danger);
+  border-color: var(--color-border);
+  transform: translateY(-50%) translate(-2px, -2px);
+}
+
 .sidebar {
   min-width: 0;
   padding: var(--space-4);
@@ -1721,13 +1751,13 @@ h2 {
 }
 
 /* ==========================================================================
-   TOAST NOTIFICATIONS — top-right capture feedback
+   TOAST NOTIFICATIONS — bottom-left status feedback
    ========================================================================== */
 
 .toast {
-  position: absolute;
-  top: -8px;
-  right: 8px;
+  position: fixed;
+  left: var(--space-4);
+  bottom: var(--space-4);
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
@@ -1740,8 +1770,8 @@ h2 {
   font-size: 12px;
   line-height: 1.4;
   white-space: nowrap;
-  animation: toastIn var(--transition-fast) ease-out, toastOut var(--transition-normal) ease-in 2.7s forwards;
-  z-index: 9999;
+  animation: toastIn var(--transition-fast) ease-out, toastOut var(--transition-normal) ease-in 2.8s forwards;
+  z-index: var(--z-toast);
 }
 
 .toast-success {
@@ -1767,7 +1797,7 @@ h2 {
 }
 
 @keyframes toastIn {
-  from { opacity: 0; transform: translateY(-6px); }
+  from { opacity: 0; transform: translateY(6px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
