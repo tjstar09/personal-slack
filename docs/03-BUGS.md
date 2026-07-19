@@ -96,6 +96,17 @@ All known bugs, their fixes, and how to avoid repeating them.
 - **Fix**: In `handleSendToPage`, extract the moved message's body and update the destination conversation's `summary` and `updatedAt` fields. Also update the moved message's `updatedAt` and bookmarks' `updatedAt` for consistency.
 - **Avoid**: When moving messages between conversations, always update the destination conversation's metadata (`summary`, `updatedAt`, `tags`) so the sidebar reflects the change immediately.
 
+### Issue 16 — Page delete button hidden for non-deletable pages
+- **Symptom**: The delete button in the tabstrip was completely hidden for default pages (Bookmarks, Notes, Melted Tabs) and when only one page exists, leaving blank space.
+- **Cause**: The button was conditionally rendered as `null` when `canDelete` was false.
+- **Fix**: Always render the button but apply `disabled` attribute and `.disabled` class when not deletable. Added CSS for `:disabled` and `.disabled` states (muted color, not-allowed cursor, opacity 0.5, no hover effects).
+- **Avoid**: Don't hide action buttons conditionally — show them disabled so users understand the action exists but isn't available.
+
+### Issue 17 — Status messages don't auto-timeout
+- **Symptom**: Status messages like "Posted", "Page Deleted", "Posted and saved 1 bookmark" appeared but never disappeared.
+- **Cause**: Many code paths called `setStatus()` directly instead of `showStatus()`, bypassing the 3-second auto-fade timer.
+- **Fix**: Replaced all 20+ direct `setStatus()` calls with `showStatus()` which has built-in 3000ms timeout via `statusTimerRef`.
+- **Avoid**: Always use `showStatus()` for user-facing status messages. Never call `setStatus()` directly.
 ---
 
 ## Historical Pitfalls (from v0.2 → v1.0 migration)

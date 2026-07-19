@@ -35,7 +35,7 @@ Current active version. Older v0.1/v0.2 features are archived in collapsible blo
 - [x] Auto-growing composer textarea (56px → up to 40vh)
 - [x] Embedded Send button inside composer box
 - [x] Pin icon (Pin icon instead of misleading Star)
-- [x] Status messages auto-fade after 5 seconds
+- [x] Status messages auto-fade after 3 seconds
 - [x] Per-message hover toolbar (Copy, Send-to-page, Delete)
 - [x] Keyboard-first composer (Esc blurs, ↑ loads last message)
 - [x] Auto-tag by content (GitHub → `github`, YouTube → `video`, etc.)
