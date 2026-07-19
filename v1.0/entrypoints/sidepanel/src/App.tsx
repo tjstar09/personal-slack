@@ -289,7 +289,7 @@ export function App({ fullWindow = false }: { fullWindow?: boolean }) {
       const data = message.data;
       if (data?.body) {
         setDraft((current) => ({ ...current, body: data.body, tags: data.tags?.join(', ') || '' }));
-        setStatus('Tab captured from context menu. Review and send.');
+        showStatus('Tab captured from context menu. Review and send.');
       }
     };
     chrome.runtime.onMessage.addListener(handler);
@@ -300,7 +300,7 @@ export function App({ fullWindow = false }: { fullWindow?: boolean }) {
       if (pending?.body) {
         setDraft((current) => ({ ...current, body: pending.body, tags: pending.tags?.join(', ') || 'capture' }));
         chrome.storage.local.remove('pending-capture');
-        setStatus('Pending capture loaded. Review and send.');
+        showStatus('Pending capture loaded. Review and send.');
       }
     });
 
@@ -638,7 +638,7 @@ export function App({ fullWindow = false }: { fullWindow?: boolean }) {
     }));
     setDraft((current) => ({ ...current, pageId: page.id }));
     setNewPageName('');
-    setStatus(`Created ${name}.`);
+    showStatus(`Created ${name}.`);
   };
 
   const deletePage = (pageId: string) => {
@@ -738,11 +738,11 @@ export function App({ fullWindow = false }: { fullWindow?: boolean }) {
             return;
           }
           case '/summarize': {
-            setStatus('Summarizing current tab...');
+            showStatus('Summarizing current tab...');
             try {
               const data = await captureTab();
               if (!data.markdown) {
-                setStatus('Could not capture this tab for summarization.');
+                showStatus('Could not capture this tab for summarization.');
                 return;
               }
               // Extractive summarization: pick top sentences by keyword density
@@ -769,14 +769,14 @@ export function App({ fullWindow = false }: { fullWindow?: boolean }) {
                 data.markdown,
               ].join('\n');
               setDraft((current) => ({ ...current, body: summaryBody, tags: 'summary' }));
-              setStatus('Summary generated. Review and send.');
+              showStatus('Summary generated. Review and send.');
             } catch (error) {
-              setStatus(`Summarize failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+              showStatus(`Summarize failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
             }
             return;
           }
           case '/todo': {
-            setStatus('Extracting todos from the workspace...');
+            showStatus('Extracting todos from the workspace...');
             const todoLines: string[] = [];
             workspace.messages.forEach((msg) => {
               const matches = msg.body.match(/(?:^|\n)\s*[-*]\s*\[.?\]\s*.+/g);
@@ -790,11 +790,11 @@ export function App({ fullWindow = false }: { fullWindow?: boolean }) {
               todoLines.length ? todoLines.join('\n') : '_No checkboxes found in messages._',
             ].join('\n');
             setDraft((current) => ({ ...current, body: todoBody, tags: 'todo' }));
-            setStatus(`Found ${todoLines.length} todo items. Review and send.`);
+            showStatus(`Found ${todoLines.length} todo items. Review and send.`);
             return;
           }
           case '/todos': {
-            setStatus('Building interactive checklist...');
+            showStatus('Building interactive checklist...');
             const todoItems: { messageId: string; line: string; index: number }[] = [];
             workspace.messages.forEach((msg) => {
               const lines = msg.body.split('\n');
@@ -806,7 +806,7 @@ export function App({ fullWindow = false }: { fullWindow?: boolean }) {
               });
             });
             if (todoItems.length === 0) {
-              setStatus('No checkboxes found in the workspace.');
+              showStatus('No checkboxes found in the workspace.');
               return;
             }
             // Build a markdown list with source message IDs encoded in a custom protocol
@@ -821,15 +821,15 @@ export function App({ fullWindow = false }: { fullWindow?: boolean }) {
               }),
             ].join('\n');
             setDraft((current) => ({ ...current, body: todoBody, tags: 'todos' }));
-            setStatus(`Found ${todoItems.length} todo items. Review and send to save as interactive list.`);
+            showStatus(`Found ${todoItems.length} todo items. Review and send to save as interactive list.`);
             return;
           }
           case '/ask': {
             if (!parsed.args) {
-              setStatus('Usage: /ask [query] — search conversation history');
+              showStatus('Usage: /ask [query] — search conversation history');
               return;
             }
-            setStatus('Searching conversations...');
+            showStatus('Searching conversations...');
             const query = parsed.args.toLowerCase();
             const results = workspace.messages
               .filter((msg) => msg.body.toLowerCase().includes(query))
@@ -844,7 +844,7 @@ export function App({ fullWindow = false }: { fullWindow?: boolean }) {
               results.length ? results.join('\n') : '_No matches found._',
             ].join('\n');
             setDraft((current) => ({ ...current, body: askBody, tags: 'ask' }));
-            setStatus(`Found ${results.length} results. Review and send.`);
+            showStatus(`Found ${results.length} results. Review and send.`);
             return;
           }
         }
@@ -866,7 +866,7 @@ export function App({ fullWindow = false }: { fullWindow?: boolean }) {
 
     const addedBookmarks = nextWorkspace.bookmarks.slice(beforeCount);
     await Promise.allSettled(addedBookmarks.map((bookmark) => addChromeBookmark(bookmark.url, bookmark.title)));
-    setStatus(
+    showStatus(
       addedBookmarks.length
         ? `Posted and saved ${addedBookmarks.length} bookmark${addedBookmarks.length === 1 ? '' : 's'}.`
         : 'Posted.',
@@ -881,35 +881,35 @@ export function App({ fullWindow = false }: { fullWindow?: boolean }) {
       const restored = normalizeWorkspace(parsed);
       setWorkspace(restored);
       setDraft((current) => ({ ...current, pageId: restored.selectedPageId || BOOKMARKS_PAGE_ID }));
-      setStatus('Backup restored.');
+      showStatus('Backup restored.');
     } catch (error) {
-      setStatus(`Restore failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      showStatus(`Restore failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   };
 
   const exportJson = () => {
     downloadText(makeBackupFilename(), exportWorkspaceJson(workspace));
-    setStatus('JSON backup exported.');
+    showStatus('JSON backup exported.');
   };
 
   const exportMarkdown = () => {
     downloadText(makeMarkdownFilename(workspace), exportWorkspaceMarkdown(workspace), 'text/markdown');
-    setStatus('Markdown export downloaded.');
+    showStatus('Markdown export downloaded.');
   };
 
   const exportGeminiPrompt = () => {
     downloadText(makeGeminiPromptFilename(), exportGeminiBookmarkPrompt(workspace), 'text/markdown');
-    setStatus('Gemini bookmark sync prompt exported.');
+    showStatus('Gemini bookmark sync prompt exported.');
   };
 
   const exportDrive = async () => {
     setDriveBusy(true);
-    setStatus('Uploading JSON, markdown, and Gemini prompt to Google Drive...');
+    showStatus('Uploading JSON, markdown, and Gemini prompt to Google Drive...');
     try {
       await exportWorkspaceToDrive(workspace);
-      setStatus('Exported to Google Drive.');
+      showStatus('Exported to Google Drive.');
     } catch (error) {
-      setStatus(`Drive export needs setup: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      showStatus(`Drive export needs setup: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setDriveBusy(false);
     }
@@ -929,7 +929,7 @@ export function App({ fullWindow = false }: { fullWindow?: boolean }) {
 
   const syncDriveNotes = async () => {
     setDriveSyncBusy(true);
-    setStatus('Syncing notes folder structure to Google Drive...');
+    showStatus('Syncing notes folder structure to Google Drive...');
     try {
       const config = { ...DEFAULT_DRIVE_SYNC_CONFIG, ...workspace.driveSync };
       const result = await syncWorkspaceNotesToDrive(workspace, config);
@@ -945,9 +945,9 @@ export function App({ fullWindow = false }: { fullWindow?: boolean }) {
         },
         updatedAt: result.syncedAt,
       }));
-      setStatus(`Synced ${result.syncedFiles.length} notes files to Drive.`);
+      showStatus(`Synced ${result.syncedFiles.length} notes files to Drive.`);
     } catch (error) {
-      setStatus(`Drive notes sync needs setup: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      showStatus(`Drive notes sync needs setup: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setDriveSyncBusy(false);
     }
@@ -1102,12 +1102,14 @@ export function App({ fullWindow = false }: { fullWindow?: boolean }) {
             const isDefaultPage = [BOOKMARKS_PAGE_ID, 'page-notes', MELTED_TABS_PAGE_ID].includes(selectedPage.id);
             const isLastPage = workspace.pages.length <= 1;
             const canDelete = !isDefaultPage && !isLastPage;
-            return canDelete ? (
+            return (
               <button
-                className="mode-button page-delete-tab"
-                title="Delete page"
+                className={'mode-button page-delete-tab' + (canDelete ? '' : ' disabled')}
+                title={canDelete ? 'Delete page' : (isDefaultPage ? 'Cannot delete default pages' : 'Cannot delete the last page')}
+                disabled={!canDelete}
                 onClick={(e) => {
                   e.stopPropagation();
+                  if (!canDelete) return;
                   if (window.confirm(`Delete page "${selectedPage.name}"? This will also delete all conversations and messages in this page.`)) {
                     deletePage(selectedPage.id);
                   }
@@ -1115,7 +1117,7 @@ export function App({ fullWindow = false }: { fullWindow?: boolean }) {
               >
                 <Trash2 size={14} />
               </button>
-            ) : null;
+            );
           })()}
         </div>
 
@@ -1368,7 +1370,7 @@ export function App({ fullWindow = false }: { fullWindow?: boolean }) {
               const fresh = createDefaultWorkspace();
               setWorkspace(fresh);
               setDraft({ ...emptyDraft, pageId: fresh.selectedPageId });
-              setStatus('Workspace reset.');
+              showStatus('Workspace reset.');
             }}
           />
         )}
