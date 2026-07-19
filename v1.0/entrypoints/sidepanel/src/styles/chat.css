@@ -688,7 +688,7 @@
   justify-content: center;
 }
 
-/* Status line */
+/* Status line — fades out after 3 seconds (syncs with JS setTimeout) */
 .main-status {
   position: fixed;
   bottom: var(--space-4);
@@ -702,7 +702,17 @@
   font-size: 12px;
   font-family: var(--font-mono);
   z-index: 9999;
-  animation: slideUp var(--transition-fast);
+  animation: statusFadeIn var(--transition-fast) ease-out, statusFadeOut var(--transition-normal) ease-in 2.6s forwards;
+}
+
+@keyframes statusFadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes statusFadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
 }
 
 /* Hidden file input */
