@@ -2,7 +2,7 @@
    ROOT THEME & VARIABLES — Personal Slack v1.0 (Neobrutalism)
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@100;200;300;400;500;600;700;800;900&family=Roboto:wght@100;200;300;400;500;600;700;800;900&family=STIX+Two+Text:wght@400;500;600;700&family=Source+Code+Pro:wght@300;400;500;600;700&family=Bangers&display=swap');
 
 :root {
   color-scheme: light dark;
@@ -104,6 +104,78 @@
   --shadow-lg: 0 8px 24px rgba(0,0,0,0.5);
   --shadow-xl: 0 16px 48px rgba(0,0,0,0.6);
   --shadow: var(--shadow-md);
+  --shadow-elevated: var(--shadow-lg);
+}
+
+/* ==========================================================================
+   NEON THEME — Electric neon glow effects (.neon class on <html>)
+   Based on the Neon Design System: high-contrast, electric glow with bold
+   color pairings. Brand primary: #BBF351 (lime), secondary: #00BCFF (cyan).
+   Fonts: primary=Roboto, display=STIX Two Text, mono=Source Code Pro
+   ========================================================================== */
+.neon {
+  --color-primary: #BBF351;           /* Lime green - neon primary */
+  --color-primary-hover: #A8E03E;     /* Lime hover */
+  --color-secondary: #00BCFF;         /* Cyan - secondary accent (electric neon) */
+  --color-secondary-hover: #00A8E6;   /* Cyan hover */
+  --color-success: #16A34A;           /* Green - success states */
+  --color-warning: #D97706;           /* Amber - warning states */
+  --color-danger: #DC2626;            /* Red - danger/destructive */
+  --color-surface: #FFFFFF;           /* White - clean bright surface */
+  --color-surface-elevated: #F3F4F6;  /* Light grey for elevated surfaces */
+  --color-text: #111827;              /* Near-black - high contrast primary text */
+  --color-text-muted: #6B7280;        /* Muted text */
+  --color-neutral: #FFFFFF;           /* Neutral background (same as surface) */
+  --color-border: #BBF351;            /* Lime borders - neon glow edge */
+  --color-border-subtle: #D1D5DB;     /* Subtle borders for nested elements */
+  --color-muted: #6B7280;             /* Muted text, placeholders */
+  --color-focus: #00BCFF80;           /* Semi-transparent cyan for focus rings */
+
+  /* Typography - Neon font stack */
+  --font-family: 'Roboto', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: 'Source Code Pro', 'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* Shadows - with neon glow effect (lime/cyan tint) */
+  --shadow-sm: 0 1px 3px rgba(0,188,255,0.15);
+  --shadow-md: 0 4px 12px rgba(0,188,255,0.2);
+  --shadow-lg: 0 8px 24px rgba(187,243,81,0.25);
+  --shadow-xl: 0 16px 48px rgba(187,243,81,0.3);
+  --shadow-elevated: var(--shadow-lg);
+}
+
+/* ==========================================================================
+   TETRIS THEME — Classic block-game inspired (.tetris class on <html>)
+   Based on the Tetris Design System: playful colors, bold display fonts,
+   and compact high-energy layouts. Brand primary: #1C202B, secondary: #7107E7.
+   Fonts: primary=Bangers, display=Bangers, mono=JetBrains Mono
+   ========================================================================== */
+.tetris {
+  --color-primary: #1C202B;           /* Dark navy - block-game primary */
+  --color-primary-hover: #2A3040;     /* Dark navy hover */
+  --color-secondary: #7107E7;         /* Bright purple - classic tetris accent */
+  --color-secondary-hover: #8220F5;   /* Purple hover */
+  --color-success: #16A34A;           /* Green - success states */
+  --color-warning: #D97706;           /* Amber - warning states */
+  --color-danger: #DC2626;            /* Red - danger/destructive */
+  --color-surface: #DFE7FF;           /* Light periwinkle - playful background */
+  --color-surface-elevated: #C8D4F5;  /* Slightly darker periwinkle for elevated surfaces */
+  --color-text: #1C398E;              /* Deep navy blue - primary text */
+  --color-text-muted: #5A6DBF;        /* Muted periwinkle-blue for secondary text */
+  --color-neutral: #DFE7FF;           /* Neutral background (same as surface) */
+  --color-border: #7107E7;            /* Purple borders - playful contrast */
+  --color-border-subtle: #B0C0E8;     /* Subtle borders for nested elements */
+  --color-muted: #5A6DBF;             /* Muted text, placeholders */
+  --color-focus: #7107E780;           /* Semi-transparent purple for focus rings */
+
+  /* Typography - Tetris font stack (Bangers for playful block-game feel) */
+  --font-family: 'Bangers', 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* Shadows - crisp, with purple tint for game-like depth */
+  --shadow-sm: 0 2px 4px rgba(113,7,231,0.15);
+  --shadow-md: 0 4px 12px rgba(113,7,231,0.2);
+  --shadow-lg: 0 8px 24px rgba(113,7,231,0.25);
+  --shadow-xl: 0 16px 48px rgba(113,7,231,0.3);
   --shadow-elevated: var(--shadow-lg);
 }
 

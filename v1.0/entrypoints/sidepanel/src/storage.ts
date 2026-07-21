@@ -52,7 +52,7 @@ export const saveWorkspace = async (workspace: WorkspaceData) => {
   await chrome.storage.local.set({ [STORAGE_KEY]: workspace });
 };
 
-export type ThemeMode = 'light' | 'dark' | 'perspective' | 'glassmorphism';
+export type ThemeMode = 'light' | 'dark' | 'perspective' | 'glassmorphism' | 'neon' | 'tetris';
 
 export const loadThemePreference = async (): Promise<ThemeMode | null> => {
   if (!hasChromeStorage()) {
