@@ -2,7 +2,7 @@
    ROOT THEME & VARIABLES — Personal Slack v1.0 (Neobrutalism)
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
 :root {
   color-scheme: light dark;
@@ -97,12 +97,87 @@
   --color-muted: #D1D5DB;         /* Muted text, placeholders (lighter for visibility) */
   --color-focus: #A78BFA80;       /* Semi-transparent purple for focus rings (dark mode) */
   
-  /* Shadows - minimal, borders preferred for elevation */
+/* Shadows - minimal, borders preferred for elevation */
   /* Dark mode shadows use rgba(0,0,0, higher alpha) for depth */
   --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
   --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
   --shadow-lg: 0 8px 24px rgba(0,0,0,0.5);
   --shadow-xl: 0 16px 48px rgba(0,0,0,0.6);
   --shadow: var(--shadow-md);
+  --shadow-elevated: var(--shadow-lg);
+}
+
+/* ==========================================================================
+   PERSPECTIVE THEME — Spatial depth with isometric flair (.perspective class on <html>)
+   Based on the Perspective Design System: isometric views, vanishing points,
+   layered elements with 3D-like realism. Brand primary: #00BD7D.
+   Fonts: primary=Poppins, display=Oswald, mono=JetBrains Mono
+   ========================================================================== */
+.perspective {
+  --color-primary: #00BD7D;           /* Green - brand primary */
+  --color-primary-hover: #00A36E;     /* Green hover */
+  --color-secondary: #00BD7D;         /* Green - secondary accent (same as primary for cohesive depth) */
+  --color-secondary-hover: #00A36E;   /* Green secondary hover */
+  --color-success: #16A34A;           /* Green - success states */
+  --color-warning: #D97706;           /* Amber - warning states */
+  --color-danger: #DC2626;            /* Red - danger/destructive */
+  --color-surface: #0E1A1F;          /* Deep teal-black - primary background (spatial depth base) */
+  --color-surface-elevated: #1A2D35;  /* Elevated surfaces (cards lift off the deep background) */
+  --color-text: #E8F0F2;             /* Ice white - primary text (high contrast on deep bg) */
+  --color-text-muted: #9AB0B8;       /* Muted teal-grey for secondary text */
+  --color-neutral: #0E1A1F;          /* Neutral background (same as surface) */
+  --color-border: #00BD7D;           /* Green borders - sharp spatial delineation */
+  --color-border-subtle: #2A404A;    /* Subtle borders for nested elements */
+  --color-muted: #9AB0B8;            /* Muted text, placeholders */
+  --color-focus: #00BD7D80;          /* Semi-transparent green for focus rings */
+
+  /* Typography - Perspective font stack */
+  --font-family: 'Poppins', 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* Shadows - deeper, with spatial depth feel */
+  --shadow-sm: 0 2px 4px rgba(0,0,0,0.4);
+  --shadow-md: 0 6px 16px rgba(0,0,0,0.5);
+  --shadow-lg: 0 12px 32px rgba(0,0,0,0.6);
+  --shadow-xl: 0 20px 52px rgba(0,0,0,0.7);
+  --shadow-elevated: var(--shadow-lg);
+}
+
+/* ==========================================================================
+   GLASSMORPHISM THEME — Frosted glass with translucent layers (.glassmorphism class on <html>)
+   Based on the Glassmorphism Design System: frosted glass effect with translucent
+   layers, subtle blur, and luminous borders for depth and modern elegance.
+   Brand primary: #1856FF. Fonts: primary=Plus Jakarta Sans, mono=JetBrains Mono
+   ========================================================================== */
+.glassmorphism {
+  --color-primary: #1856FF;           /* Blue - brand primary */
+  --color-primary-hover: #2A6BFF;     /* Blue hover */
+  --color-secondary: #3A344E;         /* Deep purple - secondary accent */
+  --color-secondary-hover: #4D4563;   /* Deep purple hover */
+  --color-success: #07CA6B;           /* Green - success states */
+  --color-warning: #E89558;           /* Amber - warning states */
+  --color-danger: #EA2143;            /* Red - danger/destructive */
+  --color-surface: rgba(255,255,255,0.55);  /* Translucent white - glass base */
+  --color-surface-elevated: rgba(255,255,255,0.75); /* More opaque glass for elevated surfaces */
+  --color-text: #141414;              /* Near-black - primary text */
+  --color-text-muted: #6B7280;        /* Muted text */
+  --color-neutral: rgba(255,255,255,0.55); /* Neutral background (same as surface) */
+  --color-border: rgba(24,86,255,0.25);   /* Luminous blue border - subtle glass edge */
+  --color-border-subtle: rgba(24,86,255,0.12); /* Subtle borders for nested elements */
+  --color-muted: #6B7280;             /* Muted text, placeholders */
+  --color-focus: rgba(24,86,255,0.35); /* Semi-transparent blue for focus rings */
+
+  /* Glassmorphism backdrop blur */
+  --glass-blur: 12px;
+
+  /* Typography - Glassmorphism font stack */
+  --font-family: 'Plus Jakarta Sans', 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* Shadows - soft, diffused for glass aesthetic */
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.10);
+  --shadow-xl: 0 16px 48px rgba(0,0,0,0.12);
   --shadow-elevated: var(--shadow-lg);
 }
