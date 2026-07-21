@@ -9,11 +9,13 @@ import {
   CloudCog,
   Copy,
   Download,
+  Droplets,
   ExternalLink,
   FileDown,
   FolderPlus,
   GalleryVerticalEnd,
   Github,
+  Grid3x3,
   Hash,
   History,
   Import,
@@ -22,6 +24,7 @@ import {
   MessageSquarePlus,
   Minimize2,
   Moon,
+  Palette,
   PanelRightClose,
   PanelRightOpen,
   Pin,
@@ -29,6 +32,7 @@ import {
   Search,
   Send,
   Settings,
+  Siren,
   Sparkles,
   Sun,
   Tags,
@@ -68,7 +72,7 @@ import {
   makeMarkdownFilename,
 } from './exports';
 import { findGitHubRepos, getGitHubActionLinks, type GitHubRepoInfo } from './githubLinks';
-import { loadWorkspace, saveWorkspace, loadThemePreference, saveThemePreference } from './storage';
+import { loadWorkspace, saveWorkspace, loadThemePreference, saveThemePreference, type ThemeMode } from './storage';
 import { captureTab } from './captureTab';
 import { isSlashCommand, parseSlashCommand, executeMeltTabs, SLASH_COMMANDS, type SlashCommand } from './commands';
 import { MELTED_TABS_PAGE_ID } from './data';
@@ -192,8 +196,8 @@ export function App({ fullWindow = false }: { fullWindow?: boolean }) {
   const moreMenuRef = useRef<HTMLDivElement | null>(null);
   const captureButtonGroupRef = useRef<HTMLDivElement | null>(null);
   
-  // Theme state
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  // Theme state — extended to support 3 themes
+  const [theme, setTheme] = useState<ThemeMode>('light');
   const [themeLoaded, setThemeLoaded] = useState(false);
 
   // Position the More menu relative to the button on open/reopen
@@ -240,20 +244,42 @@ export function App({ fullWindow = false }: { fullWindow?: boolean }) {
     toastTimerRef.current = setTimeout(() => setToast(null), 3000);
   }, []);
 
-  // Load theme preference
+  // Load theme preference — supports 'light', 'dark', 'perspective', 'glassmorphism', 'neon', 'tetris'
   useEffect(() => {
     loadThemePreference().then((saved) => {
-      const initialTheme = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      const initialTheme: ThemeMode = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
       setTheme(initialTheme);
-      document.documentElement.classList.toggle('dark', initialTheme === 'dark');
+      document.documentElement.classList.remove('dark', 'perspective', 'glassmorphism', 'neon', 'tetris');
+      if (initialTheme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else if (initialTheme === 'perspective') {
+        document.documentElement.classList.add('perspective');
+      } else if (initialTheme === 'glassmorphism') {
+        document.documentElement.classList.add('glassmorphism');
+      } else if (initialTheme === 'neon') {
+        document.documentElement.classList.add('neon');
+      } else if (initialTheme === 'tetris') {
+        document.documentElement.classList.add('tetris');
+      }
       setThemeLoaded(true);
     });
   }, []);
 
-  // Apply theme class to document
+  // Apply theme class to document whenever theme changes
   useEffect(() => {
     if (!themeLoaded) return;
-    document.documentElement.classList.toggle('dark', theme === 'dark');
+    document.documentElement.classList.remove('dark', 'perspective', 'glassmorphism', 'neon', 'tetris');
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else if (theme === 'perspective') {
+      document.documentElement.classList.add('perspective');
+    } else if (theme === 'glassmorphism') {
+      document.documentElement.classList.add('glassmorphism');
+    } else if (theme === 'neon') {
+      document.documentElement.classList.add('neon');
+    } else if (theme === 'tetris') {
+      document.documentElement.classList.add('tetris');
+    }
     saveThemePreference(theme);
   }, [theme, themeLoaded]);
 
@@ -1310,13 +1336,40 @@ export function App({ fullWindow = false }: { fullWindow?: boolean }) {
               <Maximize2 size={16} />
             </button>
           )}
+          {/* Theme toggle — cycles light → dark → perspective → glassmorphism → neon → tetris → light */}
           <button
             className="icon-button theme-toggle"
-            onClick={() => setTheme((prev) => (prev === 'light' ? 'dark' : 'light'))}
-            title={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
-            aria-label={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
+            onClick={() => setTheme((prev) => {
+              if (prev === 'light') return 'dark';
+              if (prev === 'dark') return 'perspective';
+              if (prev === 'perspective') return 'glassmorphism';
+              if (prev === 'glassmorphism') return 'neon';
+              if (prev === 'neon') return 'tetris';
+              return 'light';
+            })}
+            title={
+              theme === 'light' ? 'Switch to dark mode' :
+              theme === 'dark' ? 'Switch to perspective mode' :
+              theme === 'perspective' ? 'Switch to glassmorphism mode' :
+              theme === 'glassmorphism' ? 'Switch to neon mode' :
+              theme === 'neon' ? 'Switch to tetris mode' :
+              'Switch to light mode'
+            }
+            aria-label={
+              theme === 'light' ? 'Switch to dark mode' :
+              theme === 'dark' ? 'Switch to perspective mode' :
+              theme === 'perspective' ? 'Switch to glassmorphism mode' :
+              theme === 'glassmorphism' ? 'Switch to neon mode' :
+              theme === 'neon' ? 'Switch to tetris mode' :
+              'Switch to light mode'
+            }
           >
-            {theme === 'light' ? <Moon size={16} /> : <Sun size={16} />}
+            {theme === 'light' ? <Moon size={16} /> :
+             theme === 'dark' ? <Sun size={16} /> :
+             theme === 'perspective' ? <Palette size={16} /> :
+             theme === 'glassmorphism' ? <Droplets size={16} /> :
+             theme === 'neon' ? <Siren size={16} /> :
+             <Grid3x3 size={16} />}
           </button>
         </div>
 
